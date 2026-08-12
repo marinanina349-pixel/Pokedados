@@ -652,9 +652,9 @@ const POKE_SEED = [
 ["899", "Wyrdeer", ["Normal", "Psychic"], [179, 125, 92, 125, 95, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/899.png"], ["Intimidate", "Frisk"]],
 ["902", "Basculegion", ["Water", "Ghost"], [195, 132, 85, 100, 95, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/902.png"], ["Rattled", "Adaptability"]],
 ["903", "Sneasler", ["Fighting", "Poison"], [155, 150, 80, 60, 100, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/903.png"], ["Pressure", "Unburden"]],
-["909", "Meowscarada", ["Grass", "Dark"], [151, 130, 90, 101, 90, 143, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/909.png"], ["Overgrow", "Protean"]],
-["912", "Skeledirge", ["Fire", "Ghost"], [179, 95, 120, 130, 95, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/912.png"], ["Torrent", "Unaware"]],
-["915", "Quaquaval", ["Water", "Fighting"], [160, 140, 100, 105, 95, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/915.png"], ["Torrent", "Moxie"]],
+["908", "Meowscarada", ["Grass", "Dark"], [151, 130, 90, 101, 90, 143, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/908.png"], ["Overgrow", "Protean"]],
+["911", "Skeledirge", ["Fire", "Ghost"], [179, 95, 120, 130, 95, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/911.png"], ["Torrent", "Unaware"]],
+["914", "Quaquaval", ["Water", "Fighting"], [160, 140, 100, 105, 95, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/914.png"], ["Torrent", "Moxie"]],
 ["925", "Maushold", ["Normal"], [149, 95, 90, 85, 95, 131, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/925.png"], ["Friend Guard", "Technician"]],
 ["939", "Bellibolt", ["Electric"], [184, 84, 111, 123, 103, 65, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/939.png"], ["Electromorphosis", "Static"]],
 ["968", "Orthworm", ["Steel"], [145, 105, 165, 80, 75, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/968.png"], ["Earth Eater", "Sand Veil"]],
@@ -788,7 +788,16 @@ const ABILITY_SEED = [
 /* =============================================================
    DATA — ITENS (seed curado)
 ============================================================= */
-const ITEM_SEED = [
+ITEM_SEED = [
+
+
+["Cheri Berry","Recuperação · Berry","Cura a paralisia."],
+["Pecha Berry","Recuperação · Berry","Cura o envenenamento."],
+["Rawst Berry","Recuperação · Berry","Cura a queimaduras."],
+["Aspear Berry","Recuperação · Berry","Cura o congelamento."],
+["Persim Berry","Recuperação · Berry","Cura a confusão."],
+["Oran Berry","Recuperação · Berry","Restaura 10HP do portador, quando o HP fica abaixo de 50%."],
+["Chilan Berry","Defesa · Berry","Reduz pela metade o dano de um golpe do tipo Normal."],
 ["Occa Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Fogo."],
 ["Passho Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Água."],
 ["Wacan Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Elétrico."],
@@ -806,8 +815,10 @@ const ITEM_SEED = [
 ["Colbur Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Sombrio."],
 ["Babiri Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Aço."],
 ["Roseli Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Fada."],
+
 ["Focus Sash","Defesa","Permite sobreviver com 1 HP a um golpe que nocautearia com HP cheio."],
-["Focus Band","Sobrevivência","Cerca de 10% de chance de sobreviver com 1 HP a um golpe que nocautearia."],
+["Focus Band","Defesa","Cerca de 10% de chance de sobreviver com 1 HP a um golpe que nocautearia."],
+
 ["Silk Scarf","Poder","Aumenta o poder de golpes do tipo Normal."],
 ["Charcoal","Poder","Aumenta o poder de golpes do tipo Fogo."],
 ["Mystic Water","Poder","Aumenta o poder de golpes do tipo Água."],
@@ -825,22 +836,24 @@ const ITEM_SEED = [
 ["Dragon Fang","Poder","Aumenta o poder de golpes do tipo Dragão."],
 ["Black Glasses","Poder","Aumenta o poder de golpes do tipo Sombrio."],
 ["Metal Coat","Poder","Aumenta o poder de golpes do tipo Aço."],
-["Pixie Plate","Poder","Aumenta o poder de golpes do tipo Fada."],
+["Fairy Feather","Poder","Aumenta o poder de golpes do tipo Fada."],
 ["Expert Belt","Poder","Aumenta o poder de golpes supereficazes em 20%."],
 ["Life Orb","Poder","Aumenta o poder dos golpes em 30%, mas causa recuo de 10% do HP."],
 ["Muscle Band","Poder","Aumenta o poder de golpes físicos em 10%."],
 ["Wise Glasses","Poder","Aumenta o poder de golpes especiais em 10%."],
-["Choice Band","Poder","Aumenta o Ataque em 50%, mas trava o usuário em um único golpe."],
-["Choice Specs","Poder","Aumenta o Sp. Atk em 50%, mas trava o usuário em um único golpe."],
-["Weakness Policy","Poder","Aumenta drasticamente Ataque e Sp. Atk ao ser atingido por golpe supereficaz."],
+["Metronome","Poder","Metronome aumenta o dano em 20% a cada uso consecutivo do mesmo golpe, acumulando até 100% de bônus."],
+
 ["Leftovers","Recuperação","Recupera 1/16 do HP máximo a cada turno."],
 ["Sitrus Berry","Recuperação · Berry","Recupera 25% do HP máximo quando o HP fica abaixo de 50%."],
+["Shell Bell","Recuperação","Restaura 1/8 do HP do usuário sempre que ele causa dano a um oponente com um ataque."],
 ["Big Root","Recuperação","Aumenta o HP recuperado por golpes de dreno."],
-["Lum Berry","Cura","Cura qualquer condição de status ou confusão."],
+["Lum Berry","Recuperação","Cura qualquer condição de status ou confusão."],
+
 ["Damp Rock","Clima","Estende a duração da chuva por mais turnos."],
 ["Heat Rock","Clima","Estende a duração do sol forte por mais turnos."],
 ["Smooth Rock","Clima","Estende a duração da tempestade de areia."],
 ["Icy Rock","Clima","Estende a duração da neve."],
+
 ["Iron Ball","Características","Reduz a Velocidade em 50%. Prende o usuário no chão e remove sua imunidade a Terra, Pontas, Pontas Tóxicas e Rede Pegajosa."],
 ["Wide Lens","Características","Aumenta ligeiramente a precisão dos golpes."],
 ["Zoom Lens","Características","Aumenta a precisão se o usuário agir depois do oponente."],
@@ -849,12 +862,6 @@ const ITEM_SEED = [
 ["Choice Scarf","Características","Aumenta a Velocidade em 50%, mas trava o usuário em um único golpe."],
 ["Bright Powder","Características","Reduz levemente a precisão dos golpes do oponente."],
 ["Scope Lens","Características","Aumenta a chance de desferir acertos críticos."],
-["Rocky Helmet","Punição","Causa dano de recuo a quem atacar o usuário por contato."],
-["Assault Vest","Defesa","Aumenta o Sp. Def em 50%, mas impede o uso de golpes de status."],
-["Eviolite","Defesa","Aumenta Defesa e Sp. Def de Pokémon que ainda podem evoluir."],
-["Air Balloon","Imunidade","Concede imunidade a golpes de Terra até ser atingido."],
-["Toxic Orb","Status","Envenena gravemente o usuário ao final do turno."],
-["Flame Orb","Status","Causa queimadura no usuário ao final do turno."]
 ];
 
 /* =============================================================
