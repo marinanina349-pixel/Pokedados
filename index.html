@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Champion Dex — Pokémon Champions</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root{
+  --bg:#0c0d11;
+  --panel:#15171e;
+  --panel2:#1c1f29;
+  --border:#2a2d3a;
+  --text:#e9eaef;
+  --muted:#8b90a3;
+  --gold:#e0b04e;
+  --crimson:#c1443a;
+  --disp: 'Orbitron', sans-serif;
+  --body: 'Inter', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+
+  --t-normal:#A8A878; --t-fire:#F08030; --t-water:#6890F0; --t-electric:#F0C020;
+  --t-grass:#78C850; --t-ice:#98D8D8; --t-fighting:#C03028; --t-poison:#A040A0;
+  --t-ground:#E0C068; --t-flying:#A890F0; --t-psychic:#F85888; --t-bug:#A8B820;
+  --t-rock:#B8A038; --t-ghost:#705898; --t-dragon:#7038F8; --t-dark:#8a7460;
+  --t-steel:#B8B8D0; --t-fairy:#EE99AC;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(circle at 15% 0%, rgba(224,176,78,0.08), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(193,68,58,0.08), transparent 45%),
+    var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  min-height:100vh;
+}
+::selection{background:var(--gold);color:#111;}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-track{background:var(--panel);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:6px;}
+
+.app{display:flex;min-height:100vh;}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar{
+  width:230px;flex:0 0 230px;
+  background:linear-gradient(180deg,var(--panel),var(--bg));
+  border-right:1px solid var(--border);
+  padding:24px 14px;
+  display:flex;flex-direction:column;gap:4px;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.brand{
+  font-family:var(--disp);font-weight:900;font-size:19px;letter-spacing:0.5px;
+  color:var(--gold);padding:0 10px 6px;
+  display:flex;align-items:center;gap:8px;
+}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--crimson);box-shadow:0 0 10px var(--crimson);}
+.brand-sub{font-size:10.5px;color:var(--muted);padding:0 10px 22px;letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid var(--border);margin-bottom:14px;}
+
+.nav-btn{
+  display:flex;align-items:center;gap:11px;
+  padding:11px 12px;border-radius:9px;border:1px solid transparent;
+  background:none;color:var(--muted);font-family:var(--body);font-weight:600;font-size:14px;
+  cursor:pointer;text-align:left;transition:.15s;
+}
+.nav-btn .ic{font-size:16px;width:20px;text-align:center;}
+.nav-btn:hover{background:var(--panel2);color:var(--text);}
+.nav-btn.active{background:var(--panel2);color:var(--gold);border-color:var(--border);}
+.nav-btn.active .ic{filter:drop-shadow(0 0 6px rgba(224,176,78,.5));}
+
+.side-foot{margin-top:auto;padding:14px 10px 0;font-size:11px;color:var(--muted);border-top:1px solid var(--border);line-height:1.5;}
+
+/* ---------- MAIN ---------- */
+.main{flex:1;min-width:0;padding:30px 34px 60px;}
+.view{display:none;animation:fadein .25s ease;}
+.view.active{display:block;}
+@keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+.view-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:14px;margin-bottom:22px;}
+.view-title{font-family:var(--disp);font-weight:900;font-size:28px;letter-spacing:.5px;}
+.view-sub{color:var(--muted);font-size:13.5px;margin-top:4px;max-width:640px;}
+.count-chip{font-family:var(--mono);font-size:12px;color:var(--gold);background:var(--panel2);border:1px solid var(--border);padding:5px 11px;border-radius:20px;}
+
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
+input[type=text],input[type=search],select,input[type=number]{
+  background:var(--panel2);border:1px solid var(--border);color:var(--text);
+  padding:9px 12px;border-radius:8px;font-family:var(--body);font-size:13.5px;outline:none;
+}
+input[type=text]:focus,select:focus,input[type=number]:focus{border-color:var(--gold);}
+.search-box{flex:1;min-width:180px;max-width:320px;}
+.chip-filter{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{
+  padding:6px 12px;border-radius:20px;font-size:11.5px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.4px;cursor:pointer;border:1px solid transparent;color:#12131a;opacity:.55;transition:.15s;
+}
+.chip.active{opacity:1;box-shadow:0 0 0 2px rgba(255,255,255,.15) inset;}
+.btn{
+  background:var(--gold);color:#16130a;border:none;padding:10px 16px;border-radius:8px;
+  font-weight:700;font-size:13.5px;cursor:pointer;font-family:var(--body);transition:.15s;
+}
+.btn:hover{filter:brightness(1.08);}
+.btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border);}
+.btn.danger{background:transparent;color:var(--crimson);border:1px solid var(--crimson);}
+.btn.small{padding:6px 11px;font-size:12px;}
+
+/* type badge */
+.tbadge{
+  display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;
+  font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:#14141a;
+}
+
+/* ---------- POKEMON GRID ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
+.pcard{
+  background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;
+  cursor:pointer;transition:.18s;position:relative;overflow:hidden;
+}
+.pcard:hover{transform:translateY(-3px);border-color:var(--gold);}
+.pcard .num{font-family:var(--mono);color:var(--muted);font-size:11px;}
+.pcard h3{font-family:var(--disp);font-size:16px;margin:4px 0 8px;}
+.pcard .types{display:flex;gap:5px;margin-bottom:10px;}
+.bst-bar{height:5px;border-radius:3px;background:var(--border);overflow:hidden;margin-top:8px;}
+.bst-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--crimson));}
+.mega-row{display:flex;gap:6px;margin-top:2px;margin-bottom:8px;}
+.mega-stone{
+  width:26px;height:26px;border-radius:7px;transform:rotate(45deg);
+  background:linear-gradient(135deg,#c65de0,#6a4fd1);
+  border:1px solid rgba(255,255,255,.35);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 0 8px rgba(198,93,224,.5);position:relative;
+}
+.mega-stone span{transform:rotate(-45deg);font-size:9px;font-weight:900;color:#fff;font-family:var(--disp);}
+.mega-stone:hover{filter:brightness(1.2);}
+.mega-back{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:12px;cursor:pointer;margin-bottom:6px;background:none;border:none;font-family:var(--body);}
+.mega-back:hover{color:var(--gold);}
+.pcard.selectable{cursor:pointer;}
+.pcard.selected{border-color:var(--crimson);box-shadow:0 0 0 2px var(--crimson) inset;}
+.select-check{
+  position:absolute;top:10px;left:10px;width:22px;height:22px;border-radius:50%;
+  background:var(--panel2);border:2px solid var(--border);display:flex;align-items:center;
+  justify-content:center;font-size:12px;font-weight:900;color:#fff;z-index:2;
+}
+.pcard.selected .select-check{background:var(--crimson);border-color:var(--crimson);}
+tr.row-selected td{background:rgba(193,68,58,.15) !important;}
+.row-check{cursor:pointer;}
+.select-hint{
+  background:rgba(224,176,78,.12);border:1px solid var(--gold);color:var(--gold);
+  padding:9px 14px;border-radius:8px;font-size:12.5px;margin-bottom:14px;display:none;
+}
+.select-hint.active{display:block;}
+.pcard .bst-label{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:5px;display:flex;justify-content:space-between;}
+
+/* ---------- MODAL ---------- */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(5,6,9,.72);backdrop-filter:blur(3px);
+  display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
+}
+.modal-bg.active{display:flex;}
+.modal{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;max-width:640px;width:100%;
+  max-height:88vh;overflow-y:auto;padding:26px;position:relative;
+}
+.modal h2{font-family:var(--disp);font-size:22px;margin:0 0 4px;}
+.modal .close{position:absolute;top:16px;right:18px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;}
+.stat-row{display:grid;grid-template-columns:70px 1fr 40px;align-items:center;gap:10px;margin:6px 0;font-family:var(--mono);font-size:12.5px;}
+.stat-row .bar{height:8px;background:var(--panel2);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
+.stat-row .bar i{display:block;height:100%;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+.form-grid label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px;font-weight:600;}
+.form-grid input,.form-grid select{width:100%;}
+.form-full{grid-column:1/-1;}
+
+/* ---------- TEAMS ---------- */
+.team-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px;}
+.team-card h3{font-family:var(--disp);font-size:17px;margin:0 0 10px;display:flex;justify-content:space-between;align-items:center;}
+.slot-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;}
+.slot{
+  min-width:110px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;
+  padding:10px;text-align:center;font-size:12px;flex:0 0 auto;
+}
+.slot .name{font-weight:700;margin-top:4px;}
+.slot .sub{color:var(--muted);font-size:10.5px;margin-top:2px;}
+.slot.empty{color:var(--muted);border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:78px;}
+
+.builder{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:22px;}
+.builder-slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:14px 0 20px;}
+.bslot{
+  border:2px dashed var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;
+  min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;color:var(--muted);
+}
+.bslot.filled{border-style:solid;background:var(--panel2);color:var(--text);}
+.bslot .n{font-weight:700;font-size:13px;}
+
+.editor{border-top:1px solid var(--border);margin-top:18px;padding-top:18px;}
+.stat-alloc{display:grid;grid-template-columns:60px 1fr 40px 60px;gap:8px;align-items:center;margin:6px 0;font-size:12.5px;}
+.stat-alloc input[type=range]{width:100%;accent-color:var(--gold);}
+.alloc-total{font-family:var(--mono);font-size:13px;margin-top:8px;color:var(--gold);}
+.move-select-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px;}
+
+/* ---------- TYPE CHART ---------- */
+.type-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;}
+.tchart-wrap{overflow-x:auto;}
+table.tchart{border-collapse:collapse;font-size:11px;}
+table.tchart th,table.tchart td{width:34px;height:34px;text-align:center;border:1px solid var(--bg);}
+table.tchart th{background:var(--panel2);font-size:9.5px;writing-mode:vertical-rl;transform:rotate(180deg);padding:4px 2px;}
+table.tchart th.row-h{writing-mode:horizontal-tb;transform:none;text-align:left;padding:0 8px;}
+table.tchart td{font-family:var(--mono);font-weight:700;}
+.m2{background:#2f6b3a;color:#dfffe4;}
+.m05{background:#5c2626;color:#ffd9d9;}
+.m0{background:#111;color:#666;}
+.m1{background:var(--panel2);color:var(--muted);}
+
+.type-detail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.type-detail-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.type-detail-card h4{margin:0 0 8px;font-family:var(--disp);font-size:14px;display:flex;align-items:center;gap:8px;}
+.matchup-line{font-size:11.5px;color:var(--muted);margin:4px 0;}
+.matchup-line b{color:var(--text);}
+
+/* ---------- TABLE VIEWS (moves/abilities/items) ---------- */
+.data-table{width:100%;border-collapse:collapse;font-size:13px;}
+.data-table th{
+  text-align:left;padding:10px 12px;color:var(--muted);font-size:11px;text-transform:uppercase;
+  letter-spacing:.5px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);
+}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+.data-table tr:hover td{background:var(--panel);}
+.desc-cell{color:var(--muted);font-size:12px;max-width:340px;}
+.pill{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:5px;background:var(--panel2);border:1px solid var(--border);}
+
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty-state .big{font-size:34px;margin-bottom:10px;}
+
+@media (max-width:820px){
+  .app{flex-direction:column;}
+  .sidebar{width:100%;flex:none;height:auto;position:relative;flex-direction:row;overflow-x:auto;padding:12px;gap:8px;align-items:center;}
+  .brand,.brand-sub,.side-foot{display:none;}
+  .nav-btn{flex-direction:column;gap:2px;font-size:10px;padding:8px;white-space:nowrap;}
+  .main{padding:18px;}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <nav class="sidebar">
+    <div class="brand"><span class="dot"></span><span id="brandName" contenteditable="true" spellcheck="false">CHAMPION DEX</span></div>
+    <div class="brand-sub">clique no nome acima para editar</div>
+
+    <button class="nav-btn active" data-view="pokemons"><span class="ic">◈</span> Pokémons</button>
+    <button class="nav-btn" data-view="times"><span class="ic">⚔</span> Times</button>
+    <button class="nav-btn" data-view="tipagem"><span class="ic">◐</span> Tipagem</button>
+    <button class="nav-btn" data-view="golpes"><span class="ic">✦</span> Golpes</button>
+    <button class="nav-btn" data-view="habilidades"><span class="ic">✧</span> Habilidades</button>
+    <button class="nav-btn" data-view="itens"><span class="ic">◆</span> Itens</button>
+
+    <div class="side-foot">Dados salvos automaticamente no seu navegador. Base inicial curada — expanda pelos botões "+ Adicionar".</div>
+  </nav>
+
+  <main class="main">
+
+    <!-- POKEMONS -->
+    <section class="view active" id="view-pokemons">
+      <div class="view-head">
+        <div>
+          <div class="view-title">Pokémons</div>
+          <div class="view-sub">Base curada de espécies com status base, tipos e habilidades. Adicione as que faltarem — o jogo tem 307 no total.</div>
+        </div>
+        <div class="count-chip" id="pokeCount">0 registrados</div>
+      </div>
+      <div class="toolbar">
+        <input type="text" class="search-box" id="pokeSearch" placeholder="Buscar Pokémon...">
+        <select id="pokeTypeFilter"><option value="">Todos os tipos</option></select>
+        <select id="pokeSort">
+          <option value="num">Ordenar: Nº</option>
+          <option value="name">Ordenar: Nome</option>
+          <option value="bst">Ordenar: BST (total)</option>
+        </select>
+        <button class="btn" id="btnAddPoke">+ Adicionar Pokémon</button>
+        <button class="btn secondary" id="btnTogglePokeSelect">Remover</button>
+        <button class="btn danger" id="btnDeleteSelectedPoke" style="display:none;">Excluir (0)</button>
+      </div>
+      <div class="select-hint" id="pokeSelectHint">Modo de seleção ativo: clique nos Pokémons que quer remover (eles ficam marcados com um ✓) e depois clique em "Excluir (n)" para confirmar a remoção.</div>
+      <div class="grid" id="pokeGrid"></div>
+    </section>
+
+    <!-- TIMES -->
+    <section class="view" id="view-times">
+      <div class="view-head">
+        <div>
+          <div class="view-title">Times</div>
+          <div class="view-sub">Monte equipes de até 6 Pokémon (nível ${'50'} fixo), customizando natureza, treino de status (66 pontos, máx. 32/status), habilidade, item e golpes.</div>
+        </div>
+        <button class="btn" id="btnNewTeam">+ Novo Time</button>
+      </div>
+      <div id="teamsList"></div>
+      <div id="teamBuilder" style="display:none;"></div>
+    </section>
+
+    <!-- TIPAGEM -->
+    <section class="view" id="view-tipagem">
+      <div class="view-head">
+        <div>
+          <div class="view-title">Tipagem</div>
+          <div class="view-sub">Tabela oficial de eficácia de tipos do Pokémon Champions — 18 tipos.</div>
+        </div>
+      </div>
+      <div class="tchart-wrap"><table class="tchart" id="typeChart"></table></div>
+      <p style="color:var(--muted);font-size:11.5px;margin:14px 0 28px;">Linhas = tipo atacante · Colunas = tipo defensor. Verde = super efetivo (2×) · Vermelho = pouco efetivo (½×) · Preto = imune (0×)</p>
+
+      <div class="builder" style="max-width:560px;">
+        <h3 style="font-family:var(--disp);font-size:16px;margin:0 0 4px;">Calculadora de Eficácia</h3>
+        <p style="color:var(--muted);font-size:12.5px;margin:0 0 14px;">Escolha o tipo do golpe e o(s) tipo(s) do Pokémon defensor.</p>
+        <div class="form-grid">
+          <div class="form-full"><label>Tipo do ataque</label><select id="calcAtk"></select></div>
+          <div><label>Tipo defensor 1</label><select id="calcDef1"></select></div>
+          <div><label>Tipo defensor 2 (opcional)</label><select id="calcDef2"><option value="">—</option></select></div>
+        </div>
+        <div id="calcResult" style="margin-top:20px;text-align:center;padding:22px;border-radius:12px;background:var(--panel2);border:1px solid var(--border);">
+          <div style="font-family:var(--disp);font-size:34px;font-weight:900;" id="calcResultValue">1×</div>
+          <div style="color:var(--muted);font-size:12.5px;margin-top:4px;" id="calcResultLabel">Dano normal</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOLPES -->
+    <section class="view" id="view-golpes">
+      <div class="view-head">
+        <div>
+          <div class="view-title">Golpes</div>
+          <div class="view-sub">Movimentos disponíveis com tipo, categoria, poder, precisão e PP.</div>
+        </div>
+        <div class="count-chip" id="moveCount">0 registrados</div>
+      </div>
+      <div class="toolbar">
+        <input type="text" class="search-box" id="moveSearch" placeholder="Buscar golpe...">
+        <select id="moveTypeFilter"><option value="">Todos os tipos</option></select>
+        <select id="moveCatFilter">
+          <option value="">Todas categorias</option>
+          <option value="Físico">Físico</option>
+          <option value="Especial">Especial</option>
+          <option value="Status">Status</option>
+        </select>
+        <button class="btn" id="btnAddMove">+ Adicionar Golpe</button>
+      </div>
+      <div style="overflow-x:auto;"><table class="data-table" id="moveTable"></table></div>
+    </section>
+
+    <!-- HABILIDADES -->
+    <section class="view" id="view-habilidades">
+      <div class="view-head">
+        <div>
+          <div class="view-title">Habilidades</div>
+          <div class="view-sub">Habilidades passivas e seus efeitos em batalha.</div>
+        </div>
+        <div class="count-chip" id="abilityCount">0 registradas</div>
+      </div>
+      <div class="toolbar">
+        <input type="text" class="search-box" id="abilitySearch" placeholder="Buscar habilidade...">
+        <button class="btn" id="btnAddAbility">+ Adicionar Habilidade</button>
+      </div>
+      <div style="overflow-x:auto;"><table class="data-table" id="abilityTable"></table></div>
+    </section>
+
+    <!-- ITENS -->
+    <section class="view" id="view-itens">
+      <div class="view-head">
+        <div>
+          <div class="view-title">Itens</div>
+          <div class="view-sub">Itens equipáveis, seus efeitos e categoria.</div>
+        </div>
+        <div class="count-chip" id="itemCount">0 registrados</div>
+      </div>
+      <div class="toolbar">
+        <input type="text" class="search-box" id="itemSearch" placeholder="Buscar item...">
+        <select id="itemCatFilter"><option value="">Todas categorias</option></select>
+        <button class="btn" id="btnAddItem">+ Adicionar Item</button>
+        <button class="btn secondary" id="btnToggleItemSelect">Remover</button>
+        <button class="btn danger" id="btnDeleteSelectedItem" style="display:none;">Excluir (0)</button>
+      </div>
+      <div class="select-hint" id="itemSelectHint">Modo de seleção ativo: marque os itens que quer remover na caixinha e depois clique em "Excluir (n)" para confirmar.</div>
+      <div style="overflow-x:auto;"><table class="data-table" id="itemTable"></table></div>
+    </section>
+
+  </main>
+</div>
+
+<div class="modal-bg" id="modalBg"><div class="modal" id="modalBody"></div></div>
+
+<script>
+/* =============================================================
+   DATA — TYPES (fonte: tabela oficial de eficácia do jogo)
+============================================================= */
+const TYPES = ["Normal","Fire","Water","Electric","Grass","Ice","Fighting","Poison","Ground","Flying","Psychic","Bug","Rock","Ghost","Dragon","Dark","Steel","Fairy"];
+const TYPE_PT = {Normal:"Normal",Fire:"Fogo",Water:"Água",Electric:"Elétrico",Grass:"Planta",Ice:"Gelo",Fighting:"Lutador",Poison:"Veneno",Ground:"Terra",Flying:"Voador",Psychic:"Psíquico",Bug:"Inseto",Rock:"Pedra",Ghost:"Fantasma",Dragon:"Dragão",Dark:"Sombrio",Steel:"Aço",Fairy:"Fada"};
+
+// attacking type -> {defending type: multiplier}
+const CHART = {
+ Normal:{Rock:.5,Steel:.5,Ghost:0},
+ Fire:{Fire:.5,Water:.5,Grass:2,Ice:2,Bug:2,Rock:.5,Dragon:.5,Steel:2},
+ Water:{Fire:2,Water:.5,Grass:.5,Ground:2,Rock:2,Dragon:.5},
+ Electric:{Water:2,Electric:.5,Grass:.5,Ground:0,Flying:2,Dragon:.5},
+ Grass:{Fire:.5,Water:2,Grass:.5,Poison:.5,Ground:2,Flying:.5,Bug:.5,Rock:2,Dragon:.5,Steel:.5},
+ Ice:{Fire:.5,Water:.5,Grass:2,Ice:.5,Ground:2,Flying:2,Dragon:2,Steel:.5},
+ Fighting:{Normal:2,Ice:2,Poison:.5,Flying:.5,Psychic:.5,Bug:.5,Rock:2,Ghost:0,Dark:2,Steel:2,Fairy:.5},
+ Poison:{Grass:2,Poison:.5,Ground:.5,Rock:.5,Ghost:.5,Steel:0,Fairy:2},
+ Ground:{Fire:2,Electric:2,Grass:.5,Poison:2,Flying:0,Bug:.5,Rock:2,Steel:2},
+ Flying:{Electric:.5,Grass:2,Fighting:2,Bug:2,Rock:.5,Steel:.5},
+ Psychic:{Fighting:2,Poison:2,Psychic:.5,Dark:0,Steel:.5},
+ Bug:{Fire:.5,Grass:2,Fighting:.5,Poison:.5,Flying:.5,Psychic:2,Ghost:.5,Dark:2,Steel:.5,Fairy:.5},
+ Rock:{Fire:2,Ice:2,Fighting:.5,Ground:.5,Flying:2,Bug:2,Steel:.5},
+ Ghost:{Normal:0,Psychic:2,Ghost:2,Dark:.5},
+ Dragon:{Dragon:2,Steel:.5,Fairy:0},
+ Dark:{Fighting:.5,Psychic:2,Ghost:2,Dark:.5,Fairy:.5},
+ Steel:{Fire:.5,Water:.5,Electric:.5,Ice:2,Rock:2,Steel:.5,Fairy:2},
+ Fairy:{Fire:.5,Fighting:2,Poison:.5,Dragon:2,Dark:2,Steel:.5}
+};
+function eff(atk,def1,def2){
+  let m=(CHART[atk]&&CHART[atk][def1]!==undefined)?CHART[atk][def1]:1;
+  if(def2){ let m2=(CHART[atk]&&CHART[atk][def2]!==undefined)?CHART[atk][def2]:1; m*=m2; }
+  return m;
+}
+
+/* =============================================================
+   DATA — POKÉMON (seed curado, com status base reais)
+   stats: [HP, Atk, Def, SpA, SpD, Spe]
+============================================================= */
+const POKE_SEED = [
+["003", "Venusaur", ["Grass", "Poison"], [155, 102, 103, 120, 120, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/003.png"], ["Overgrow", "Chlorophyll"]],
+["003M", "Mega Venusaur", ["Grass", "Poison"], [155, 120, 143, 142, 140, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/003_f2.png"], ["Thick Fat"]],
+["006", "Charizard", ["Fire", "Flying"], [153, 104, 98, 129, 105, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/006.png"], ["Blaze", "Solar Power"]],
+["006MX", "Mega Charizard X", ["Fire", "Dragon"], [153, 150, 131, 150, 105, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/006_f2.png"], ["Tough Claws"]],
+["006MY", "Mega Charizard Y", ["Fire", "Flying"], [153, 124, 98, 179, 135, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/006_f3.png"], ["Drought"]],
+["009", "Blastoise", ["Water"], [154, 103, 120, 105, 125, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/009.png"], ["Torrent", "Rain Dish"]],
+["009M", "Mega Blastoise", ["Water"], [154, 123, 140, 155, 135, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/009_f2.png"], ["Mega Launcher"]],
+["015", "Beedrill", ["Bug", "Poison"], [140, 110, 60, 65, 100, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/015.png"], ["Swarm", "Sniper"]],
+["015M", "Mega Beedrill", ["Bug", "Poison"], [140, 170, 60, 35, 100, 165, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/015_f2.png"], ["Adaptability"]],
+["018", "Pidgeot", ["Normal", "Flying"], [158, 100, 95, 90, 90, 121, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/018.png"], ["Keen Eye", "Tangled Feet"]],
+["018M", "Mega Pidgeot", ["Normal", "Flying"], [158, 100, 100, 155, 100, 141, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/018_f2.png"], ["No Guard"]],
+["024", "Arbok", ["Poison"], [140, 115, 89, 85, 99, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/024.png"], ["Intimidate", "Shed Skin"]],
+["025", "Pikachu", ["Electric"], [110, 75, 60, 70, 70, 110, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/025.png"], ["Static", "Lightning Rod"]],
+["026", "Raichu", ["Electric"], [135, 110, 75, 110, 100, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/026.png"], ["Static", "Lightning Rod"]],
+["026MX", "Mega Raichu X", ["Electric"], [135, 170, 95, 110, 100, 170, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/026_f3.png"], ["Electric Surge"]],
+["026MY", "Mega Raichu Y", ["Electric"], [135, 90, 85, 190, 110, 170, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/026_f4.png"], ["No Guard"]],
+["035", "Clefairy", ["Fairy"], [145, 65, 68, 80, 85, 55, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/035.png"], ["Cute Charm", "Magic Guard"]],
+["038", "Ninetales", ["Fire"], [148, 96, 95, 101, 120, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/038.png"], ["Flash Fire", "Drought"]],
+["045", "Vileplume", ["Grass", "Poison"], [150, 100, 105, 130, 110, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/045.png"], ["Chlorophyll", "Effect Spore"]],
+["059", "Arcanine", ["Fire"], [165, 130, 100, 120, 100, 115, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/059.png"], ["Intimidate", "Flash Fire"]],
+["065", "Alakazam", ["Psychic"], [130, 70, 65, 155, 115, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/065.png"], ["Synchronize", "Inner Focus"]],
+["065M", "Mega Alakazam", ["Psychic"], [130, 70, 85, 195, 125, 170, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/065_f2.png"], ["Trace"]],
+["068", "Machamp", ["Fighting"], [165, 150, 100, 85, 105, 75, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/068.png"], ["Guts", "No Guard"]],
+["071", "Victreebel", ["Grass", "Poison"], [155, 125, 85, 120, 90, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/071.png"], ["Chlorophyll", "Gluttony"]],
+["080", "Slowbro", ["Water", "Psychic"], [170, 95, 130, 120, 100, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/080.png"], ["Oblivious", "Own Tempo"]],
+["080M", "Mega Slowbro", ["Water", "Psychic"], [170, 95, 200, 150, 100, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/080_f2.png"], ["Shell Armor"]],
+["094", "Gengar", ["Ghost", "Poison"], [135, 85, 80, 150, 95, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/094.png"], ["Cursed Body"]],
+["094M", "Mega Gengar", ["Ghost", "Poison"], [135, 85, 100, 190, 115, 150, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/094_f2.png"], ["Shadow Tag"]],
+["115", "Kangaskhan", ["Normal"], [180, 115, 100, 60, 100, 110, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/115.png"], ["Early Bird", "Scrappy"]],
+["115M", "Mega Kangaskhan", ["Normal"], [180, 145, 120, 80, 120, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/115_f2.png"], ["Parental Bond"]],
+["121", "Starmie", ["Water", "Psychic"], [135, 95, 105, 120, 105, 135, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/121.png"], ["Illuminate", "Natural Cure"]],
+["121M", "Mega Starmie", ["Water", "Psychic"], [135, 115, 125, 170, 125, 155, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/121_f2.png"], ["Analytic"]],
+["127", "Pinsir", ["Bug"], [140, 145, 120, 75, 90, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/127.png"], ["Hyper Cutter", "Mold Breaker"]],
+["127M", "Mega Pinsir", ["Bug", "Flying"], [140, 175, 140, 85, 110, 125, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/127_f2.png"], ["Aerilate"]],
+["128", "Tauros", ["Normal"], [150, 120, 115, 60, 90, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128.png"], ["Intimidate", "Anger Point"]],
+["130", "Gyarados", ["Water", "Flying"], [170, 145, 99, 80, 120, 101, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/130.png"], ["Intimidate", "Moxie"]],
+["130M", "Mega Gyarados", ["Water", "Dark"], [170, 175, 129, 90, 150, 101, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/130_f2.png"], ["Mold Breaker"]],
+["132", "Ditto", ["Normal"], [123, 68, 68, 68, 68, 68, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/132.png"], ["Limber", "Imposter"]],
+["134", "Vaporeon", ["Water"], [205, 85, 80, 130, 115, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/134.png"], ["Water Absorb"]],
+["135", "Jolteon", ["Electric"], [140, 85, 80, 130, 115, 150, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/135.png"], ["Volt Absorb"]],
+["136", "Flareon", ["Fire"], [140, 150, 80, 115, 130, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/136.png"], ["Flash Fire"]],
+["142", "Aerodactyl", ["Rock", "Flying"], [155, 125, 85, 80, 95, 150, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/142.png"], ["Rock Head", "Pressure"]],
+["142M", "Mega Aerodactyl", ["Rock", "Flying"], [155, 155, 105, 90, 115, 170, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/142_f2.png"], ["Tough Claws"]],
+["143", "Snorlax", ["Normal"], [235, 130, 85, 85, 130, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/143.png"], ["Immunity", "Thick Fat"]],
+["149", "Dragonite", ["Dragon", "Flying"], [166, 154, 115, 120, 120, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/149.png"], ["Inner Focus", "Multiscale"]],
+["154", "Meganium", ["Grass"], [155, 102, 120, 103, 120, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/154.png"], ["Overgrow", "Leaf Guard"]],
+["154M", "Mega Meganium", ["Grass"], [155, 132, 150, 123, 150, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/154_f2.png"], ["Thick Fat"]],
+["157", "Typhlosion", ["Fire"], [153, 104, 98, 129, 105, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/157.png"], ["Blaze", "Flash Fire"]],
+["160", "Feraligatr", ["Water"], [160, 125, 120, 99, 103, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/160.png"], ["Torrent", "Sheer Force"]],
+["160M", "Mega Feraligatr", ["Water"], [160, 155, 145, 119, 123, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/160_f2.png"], ["Sheer Force"]],
+["168", "Ariados", ["Bug", "Poison"], [145, 110, 60, 80, 90, 60, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/168.png"], ["Swarm", "Insomnia"]],
+["181", "Ampharos", ["Electric"], [165, 95, 105, 135, 110, 75, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/181.png"], ["Static", "Plus"]],
+["181M", "Mega Ampharos", ["Electric", "Dragon"], [165, 115, 125, 185, 130, 65, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/181_f2.png"], ["Mold Breaker"]],
+["184", "Azumarill", ["Water", "Fairy"], [175, 70, 100, 80, 100, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/184.png"], ["Thick Fat", "Huge Power"]],
+["186", "Politoed", ["Water"], [165, 95, 95, 110, 120, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/186.png"], ["Water Absorb", "Drizzle"]],
+["196", "Espeon", ["Psychic"], [140, 85, 80, 150, 115, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/196.png"], ["Synchronize", "Magic Bounce"]],
+["197", "Umbreon", ["Dark"], [170, 85, 130, 80, 150, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/197.png"], ["Synchronize", "Inner Focus"]],
+["199", "Slowking", ["Water", "Psychic"], [170, 95, 100, 120, 130, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/199.png"], ["Oblivious", "Regenerator"]],
+["205", "Forretress", ["Bug", "Steel"], [150, 110, 160, 80, 80, 60, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/205.png"], ["Sturdy", "Overcoat"]],
+["208", "Steelix", ["Steel", "Ground"], [150, 105, 220, 75, 85, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/208.png"], ["Rock Head", "Sturdy"]],
+["211", "Qwilfish", ["Water", "Poison"], [140, 115, 105, 75, 75, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/211.png"], ["Poison Point", "Intimidate"]],
+["212", "Scizor", ["Bug", "Steel"], [145, 150, 120, 75, 100, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/212.png"], ["Swarm", "Technician"]],
+["212M", "Mega Scizor", ["Bug", "Steel"], [145, 170, 160, 85, 120, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/212_f2.png"], ["Technician"]],
+["214", "Heracross", ["Bug", "Fighting"], [155, 145, 95, 60, 115, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/214.png"], ["Swarm", "Guts"]],
+["214M", "Mega Heracross", ["Bug", "Fighting"], [155, 205, 135, 60, 125, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/214_f2.png"], ["Skill Link"]],
+["227", "Skarmory", ["Steel", "Flying"], [140, 100, 160, 60, 90, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/227.png"], ["Keen Eye", "Sturdy"]],
+["229", "Houndoom", ["Dark", "Fire"], [150, 110, 70, 130, 100, 115, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/229.png"], ["Early Bird", "Flash Fire"]],
+["229M", "Mega Houndoom", ["Dark", "Fire"], [150, 110, 110, 160, 110, 135, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/229_f2.png"], ["Solar Power"]],
+["248", "Tyranitar", ["Rock", "Dark"], [175, 154, 130, 115, 120, 81, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/248.png"], ["Sand Stream", "Unnerve"]],
+["248M", "Mega Tyranitar", ["Rock", "Dark"], [175, 184, 170, 115, 140, 91, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/248_f2.png"], ["Sand Stream"]],
+["254", "Sceptile", ["Grass"], [145, 105, 85, 125, 105, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/254.png"], ["Overgrow", "Unburden"]],
+["254M", "Mega Sceptile", ["Grass", "Dragon"], [145, 130, 95, 165, 105, 165, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/254_f2.png"], ["Lightning Rod"]],
+["257", "Blaziken", ["Fire", "Fighting"], [155, 140, 90, 130, 90, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/257.png"], ["Blaze", "Speed Boost"]],
+["257M", "Mega Blaziken", ["Fire", "Fighting"], [155, 180, 100, 150, 100, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/257_f2.png"], ["Speed Boost"]],
+["260", "Swampert", ["Water", "Ground"], [175, 130, 110, 105, 110, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/260.png"], ["Torrent", "Damp"]],
+["260M", "Mega Swampert", ["Water", "Ground"], [175, 170, 130, 115, 130, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/260_f2.png"], ["Swift Swim"]],
+["279", "Pelipper", ["Water", "Flying"], [135, 70, 120, 115, 90, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/279.png"], ["Keen Eye", "Drizzle"]],
+["282", "Gardevoir", ["Psychic", "Fairy"], [143, 85, 85, 145, 135, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/282.png"], ["Synchronize", "Trace"]],
+["282M", "Mega Gardevoir", ["Psychic", "Fairy"], [143, 105, 85, 185, 155, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/282_f2.png"], ["Pixilate"]],
+["302", "Sableye", ["Dark", "Ghost"], [125, 95, 95, 85, 85, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/302.png"], ["Keen Eye", "Prankster"]],
+["302M", "Mega Sableye", ["Dark", "Ghost"], [125, 105, 145, 105, 135, 40, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/302_f2.png"], ["Magic Bounce"]],
+["303", "Mawile", ["Steel", "Fairy"], [125, 105, 105, 75, 75, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/303.png"], ["Hyper Cutter", "Intimidate"]],
+["303M", "Mega Mawile", ["Steel", "Fairy"], [125, 125, 145, 75, 115, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/303_f2.png"], ["Huge Power"]],
+["306", "Aggron", ["Steel", "Rock"], [145, 130, 200, 80, 80, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/306.png"], ["Sturdy", "Rock Head"]],
+["306M", "Mega Aggron", ["Steel"], [145, 160, 250, 80, 100, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/306_f2.png"], ["Filter"]],
+["308", "Medicham", ["Fighting", "Psychic"], [135, 80, 95, 80, 95, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/308.png"], ["Pure Power"]],
+["308M", "Mega Medicham", ["Fighting", "Psychic"], [135, 120, 105, 100, 105, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/308_f2.png"], ["Pure Power"]],
+["310", "Manectric", ["Electric"], [145, 95, 80, 125, 80, 125, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/310.png"], ["Static", "Lightning Rod"]],
+["310M", "Mega Manectric", ["Electric"], [145, 95, 100, 155, 100, 155, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/310_f2.png"], ["Intimidate"]],
+["319", "Sharpedo", ["Water", "Dark"], [145, 140, 60, 115, 60, 115, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/319.png"], ["Rough Skin", "Speed Boost"]],
+["319M", "Mega Sharpedo", ["Water", "Dark"], [145, 160, 90, 130, 85, 125, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/319_f2.png"], ["Strong Jaw"]],
+["323", "Camerupt", ["Fire", "Ground"], [145, 120, 90, 125, 95, 60, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/323.png"], ["Magma Armor", "Solid Rock"]],
+["323M", "Mega Camerupt", ["Fire", "Ground"], [145, 140, 120, 165, 125, 40, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/323_f2.png"], ["Sheer Force"]],
+["324", "Torkoal", ["Fire"], [145, 105, 160, 105, 90, 40, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/324.png"], ["White Smoke", "Drought"]],
+["334", "Altaria", ["Dragon", "Flying"], [150, 90, 110, 90, 125, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/334.png"], ["Natural Cure", "Cloud Nine"]],
+["334M", "Mega Altaria", ["Dragon", "Fairy"], [150, 130, 130, 130, 125, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/334_f2.png"], ["Pixilate"]],
+["350", "Milotic", ["Water"], [170, 80, 99, 120, 145, 101, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/350.png"], ["Marvel Scale", "Competitive"]],
+["351", "Castform", ["Normal"], [145, 90, 90, 90, 90, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/351.png"], ["Forecast"]],
+["354", "Banette", ["Ghost"], [139, 135, 85, 103, 83, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/354.png"], ["Insomnia", "Frisk"]],
+["354M", "Mega Banette", ["Ghost"], [139, 185, 95, 113, 103, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/354_f2.png"], ["Prankster"]],
+["358", "Chimecho", ["Psychic"], [150, 70, 100, 115, 110, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/358.png"], ["Levitate"]],
+["359", "Absol", ["Dark"], [140, 150, 80, 95, 80, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/359.png"], ["Pressure", "Super Luck"]],
+["359M", "Mega Absol", ["Dark"], [140, 170, 80, 135, 80, 135, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/359_f2.png"], ["Magic Bounce"]],
+["362", "Glalie", ["Ice"], [155, 100, 100, 100, 100, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/362.png"], ["Inner Focus", "Ice Body"]],
+["362M", "Mega Glalie", ["Ice"], [155, 140, 100, 140, 100, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/362_f2.png"], ["Refrigerate"]],
+["376", "Metagross", ["Steel", "Psychic"], [155, 155, 150, 115, 110, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/376.png"], ["Clear Body", "Light Metal"]],
+["376M", "Mega Metagross", ["Steel", "Psychic"], [155, 165, 170, 125, 130, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/376_f2.png"], ["Tough Claws"]],
+["389", "Torterra", ["Grass", "Ground"], [170, 129, 125, 95, 105, 76, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/389.png"], ["Overgrow", "Shell Armor"]],
+["392", "Infernape", ["Fire", "Fighting"], [151, 124, 91, 124, 91, 128, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/392.png"], ["Blaze", "Iron Fist"]],
+["395", "Empoleon", ["Water", "Steel"], [159, 106, 108, 131, 121, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/395.png"], ["Torrent", "Defiant"]],
+["398", "Staraptor", ["Normal", "Flying"], [160, 140, 90, 70, 80, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/398.png"], ["Intimidate", "Reckless"]],
+["398M", "Mega Staraptor", ["Normal", "Flying"], [160, 160, 120, 80, 110, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/398_f2.png"], ["Contrary"]],
+["405", "Luxray", ["Electric"], [155, 140, 99, 115, 99, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/405.png"], ["Rivalry", "Intimidate"]],
+["407", "Roserade", ["Grass", "Poison"], [135, 90, 85, 145, 125, 110, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/407.png"], ["Natural Cure", "Poison Point"]],
+["409", "Rampardos", ["Rock"], [172, 185, 80, 85, 70, 78, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/409.png"], ["Mold Breaker", "Sheer Force"]],
+["411", "Bastiodon", ["Rock", "Steel"], [135, 72, 188, 67, 158, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/411.png"], ["Sturdy", "Soundproof"]],
+["428", "Lopunny", ["Normal"], [140, 96, 104, 74, 116, 125, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/428.png"], ["Cute Charm", "Klutz"]],
+["428M", "Mega Lopunny", ["Normal", "Fighting"], [140, 156, 114, 74, 116, 155, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/428_f2.png"], ["Scrappy"]],
+["442", "Spiritomb", ["Ghost", "Dark"], [125, 112, 128, 112, 128, 55, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/442.png"], ["Pressure", "Infiltrator"]],
+["445", "Garchomp", ["Dragon", "Ground"], [183, 150, 115, 100, 105, 122, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/445.png"], ["Sand Veil", "Rough Skin"]],
+["445M", "Mega Garchomp", ["Dragon", "Ground"], [183, 190, 135, 140, 115, 112, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/445_f2.png"], ["Sand Force"]],
+["448", "Lucario", ["Fighting", "Steel"], [145, 130, 90, 135, 90, 110, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/448.png"], ["Steadfast", "Inner Focus"]],
+["448M", "Mega Lucario", ["Fighting", "Steel"], [145, 165, 108, 160, 90, 132, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/448_f2.png"], ["Adaptability"]],
+["450", "Hippowdon", ["Ground"], [183, 132, 138, 88, 92, 67, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/450.png"], ["Sand Stream", "Sand Force"]],
+["454", "Toxicroak", ["Poison", "Fighting"], [158, 126, 85, 106, 85, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/454.png"], ["Anticipation", "Dry Skin"]],
+["460", "Abomasnow", ["Grass", "Ice"], [165, 112, 95, 112, 105, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/460.png"], ["Snow Warning", "Soundproof"]],
+["460M", "Mega Abomasnow", ["Grass", "Ice"], [165, 152, 125, 152, 125, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/460_f2.png"], ["Snow Warning"]],
+["461", "Weavile", ["Dark", "Ice"], [145, 140, 85, 65, 105, 145, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/461.png"], ["Pressure", "Pickpocket"]],
+["470", "Leafeon", ["Grass"], [140, 130, 150, 80, 85, 115, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/470.png"], ["Leaf Guard", "Chlorophyll"]],
+["471", "Glaceon", ["Ice"], [140, 80, 130, 150, 115, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/471.png"], ["Snow Cloak", "Ice Body"]],
+["472", "Gliscor", ["Ground", "Flying"], [150, 115, 145, 65, 95, 115, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/472.png"], ["Hyper Cutter", "Poison Heal"]],
+["473", "Mamoswine", ["Ice", "Ground"], [185, 150, 100, 90, 80, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/473.png"], ["Oblivious", "Thick Fat"]],
+["475", "Gallade", ["Psychic", "Fighting"], [143, 145, 85, 85, 135, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/475.png"], ["Steadfast", "Justified"]],
+["475M", "Mega Gallade", ["Psychic", "Fighting"], [143, 185, 115, 85, 135, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/475_f2.png"], ["Inner Focus"]],
+["478", "Froslass", ["Ice", "Ghost"], [145, 100, 90, 100, 90, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/478.png"], ["Snow Cloak", "Cursed Body"]],
+["478M", "Mega Froslass", ["Ice", "Ghost"], [145, 100, 90, 160, 120, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/478_f2.png"], ["Snow Warning"]],
+["479", "Rotom", ["Electric", "Ghost"], [125, 70, 97, 115, 97, 111, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479.png"], ["Levitate"]],
+["497", "Serperior", ["Grass"], [150, 95, 115, 95, 115, 133, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/497.png"], ["Overgrow", "Contrary"]],
+["500", "Emboar", ["Fire", "Fighting"], [185, 143, 85, 120, 85, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/500.png"], ["Blaze", "Reckless"]],
+["503", "Samurott", ["Water"], [170, 120, 105, 128, 90, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/503.png"], ["Torrent", "Shell Armor"]],
+["505", "Watchog", ["Normal"], [135, 105, 89, 80, 89, 97, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/505.png"], ["Illuminate", "Keen Eye"]],
+["510", "Liepard", ["Dark"], [139, 108, 70, 108, 70, 126, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/510.png"], ["Limber", "Prankster"]],
+["512", "Simisage", ["Grass"], [150, 118, 83, 118, 83, 121, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/512.png"], ["Gluttony", "Overgrow"]],
+["514", "Simisear", ["Fire"], [150, 118, 83, 118, 83, 121, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/514.png"], ["Gluttony", "Blaze"]],
+["516", "Simipour", ["Water"], [150, 118, 83, 118, 83, 121, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/516.png"], ["Gluttony", "Torrent"]],
+["518", "Musharna", ["Psychic"], [191, 75, 105, 127, 115, 49, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/518.png"], ["Forewarn", "Synchronize"]],
+["530", "Excadrill", ["Ground", "Steel"], [185, 155, 80, 70, 85, 108, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/530.png"], ["Sand Rush", "Mold Breaker"]],
+["531", "Audino", ["Normal"], [178, 80, 106, 80, 106, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/531.png"], ["Healer", "Regenerator"]],
+["531M", "Mega Audino", ["Normal", "Fairy"], [178, 80, 146, 100, 146, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/531_f2.png"], ["Healer"]],
+["534", "Conkeldurr", ["Fighting"], [180, 160, 115, 75, 85, 65, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/534.png"], ["Guts", "Sheer Force"]],
+["545", "Scolipede", ["Bug", "Poison"], [135, 120, 109, 75, 89, 132, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/545.png"], ["Swarm", "Speed Boost"]],
+["547", "Whimsicott", ["Grass", "Fairy"], [135, 87, 105, 97, 95, 136, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/547.png"], ["Prankster", "Infiltrator"]],
+["553", "Krookodile", ["Ground", "Dark"], [170, 137, 100, 85, 90, 112, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/553.png"], ["Intimidate", "Moxie"]],
+["560", "Scrafty", ["Dark", "Fighting"], [140, 110, 135, 65, 135, 78, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/560.png"], ["Intimidate", "Shed Skin", "Moxie"]],
+["560M", "Mega Scrafty", ["Dark", "Fighting"], [140, 150, 165, 65, 165, 78, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/560_f2.png"], ["Intimidate"]],
+["563", "Cofagrigus", ["Ghost"], [133, 70, 165, 115, 125, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/563.png"], ["Mummy"]],
+["569", "Garbodor", ["Poison"], [155, 115, 102, 80, 102, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/569.png"], ["Stench", "Weak Armor"]],
+["571", "Zoroark", ["Dark"], [135, 125, 80, 140, 80, 125, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/571.png"], ["Illusion"]],
+["579", "Reuniclus", ["Psychic"], [185, 85, 95, 145, 105, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/579.png"], ["Overcoat", "Magic Guard"]],
+["584", "Vanilluxe", ["Ice"], [146, 115, 105, 130, 115, 99, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/584.png"], ["Ice Body", "Snow Warning"]],
+["587", "Emolga", ["Electric", "Flying"], [130, 95, 80, 95, 80, 123, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/587.png"], ["Motor Drive", "Static"]],
+["604", "Eelektross", ["Electric"], [160, 135, 100, 125, 100, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/604.png"], ["Levitate"]],
+["604M", "Mega Eelektross", ["Electric"], [160, 175, 120, 155, 120, 60, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/604_f2.png"], ["Levitate"]],
+["609", "Chandelure", ["Ghost", "Fire"], [135, 75, 110, 165, 110, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/609.png"], ["Flash Fire", "Flame Body"]],
+["614", "Beartic", ["Ice"], [170, 150, 100, 90, 100, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/614.png"], ["Snow Cloak", "Slush Rush"]],
+["618", "Stunfisk", ["Ground", "Electric"], [184, 86, 104, 101, 119, 52, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/618.png"], ["Static", "Limber"]],
+["623", "Golurk", ["Ghost", "Ground"], [239, 164, 120, 95, 122, 94, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/623.png"], ["Iron Fist", "Klutz"]],
+["623M", "Mega Golurk", ["Ghost", "Ground"], [239, 207, 150, 115, 152, 74, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/623_f2.png"], ["No Guard"]],
+["635", "Hydreigon", ["Dark", "Dragon"], [167, 125, 110, 145, 110, 118, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/635.png"], ["Levitate"]],
+["637", "Volcarona", ["Bug", "Fire"], [160, 80, 85, 155, 125, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/637.png"], ["Flame Body", "Swarm"]],
+["652", "Chesnaught", ["Grass", "Fighting"], [163, 127, 142, 94, 95, 84, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/652.png"], ["Overgrow", "Bulletproof"]],
+["652M", "Mega Chesnaught", ["Grass", "Fighting"], [163, 157, 172, 94, 115, 104, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/652_f2.png"], ["Bulletproof"]],
+["655", "Delphox", ["Fire", "Psychic"], [150, 89, 92, 134, 120, 124, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/655.png"], ["Blaze", "Magician"]],
+["655M", "Mega Delphox", ["Fire", "Psychic"], [150, 89, 102, 184, 140, 144, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/655_f2.png"], ["Magician"]],
+["658", "Greninja", ["Water", "Dark"], [147, 115, 87, 123, 91, 142, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/658.png"], ["Torrent", "Protean"]],
+["658M", "Mega Greninja", ["Water", "Dark"], [147, 150, 107, 173, 111, 117, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/658_f3.png"], ["Protean"]],
+["660", "Diggersby", ["Normal", "Ground"], [160, 76, 97, 70, 97, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/660.png"], ["Pickup", "Huge Power"]],
+["666", "Vivillon", ["Bug", "Flying"], [155, 72, 70, 110, 70, 109, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/666.png"], ["Shield Dust", "Compound Eyes"]],
+["668", "Pyroar", ["Fire", "Normal"], [161, 88, 92, 129, 86, 126, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/668.png"], ["Rivalry", "Unnerve"]],
+["668M", "Mega Pyroar", ["Fire", "Normal"], [161, 88, 112, 179, 116, 126, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/668_f3.png"], ["Moxie"]],
+["670", "Floette", ["Fairy"], [129, 65, 67, 95, 118, 93, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/670.png"], ["Flower Veil", "Symbiosis"]],
+["670M", "Mega Floette", ["Fairy"], [129, 65, 107, 135, 138, 93, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/670_f2.png"], ["Flower Veil"]],
+["671", "Florges", ["Fairy"], [153, 85, 88, 132, 174, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/671.png"], ["Flower Veil", "Symbiosis"]],
+["675", "Pangoro", ["Fighting", "Dark"], [170, 144, 98, 89, 91, 78, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/675.png"], ["Iron Fist", "Mold Breaker"]],
+["676", "Furfrou", ["Normal"], [150, 100, 80, 85, 110, 122, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/676.png"], ["Fur Coat"]],
+["678", "Meowstic", ["Psychic"], [149, 68, 96, 103, 101, 124, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/678.png"], ["Keen Eye", "Infiltrator"]],
+["681", "Aegislash", ["Steel", "Ghost"], [135, 170, 170, 170, 170, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/681.png"], ["Stance Change"]],
+["683", "Aromatisse", ["Fairy"], [176, 92, 92, 119, 109, 49, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/683.png"], ["Healer", "Aroma Veil"]],
+["685", "Slurpuff", ["Fairy"], [157, 106, 106, 105, 95, 92, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/685.png"], ["Sweet Veil", "Unburden"]],
+["687", "Malamar", ["Dark", "Psychic"], [161, 112, 108, 88, 95, 93, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/687.png"], ["Contrary", "Suction Cups"]],
+["687M", "Mega Malamar", ["Dark", "Psychic"], [161, 162, 118, 118, 105, 93, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/687_f2.png"], ["Contrary"]],
+["689", "Barbaracle", ["Rock", "Water"], [147, 125, 135, 74, 106, 88, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/689.png"], ["Sniper", "Tough Claws"]],
+["691", "Dragalge", ["Poison", "Dragon"], [140, 95, 110, 117, 143, 64, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/691.png"], ["Poison Point", "Adaptability"]],
+["691M", "Mega Dragalge", ["Poison", "Dragon"], [140, 95, 130, 157, 183, 64, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/691_f2.png"], ["Adaptability"]],
+["693", "Clawitzer", ["Water"], [146, 93, 108, 140, 109, 79, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/693.png"], ["Mega Launcher"]],
+["695", "Heliolisk", ["Electric", "Normal"], [137, 75, 72, 129, 114, 129, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/695.png"], ["Dry Skin", "Sand Veil"]],
+["697", "Tyrantrum", ["Rock", "Dragon"], [157, 141, 139, 89, 79, 91, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/697.png"], ["Strong Jaw", "Rock Head"]],
+["699", "Aurorus", ["Rock", "Ice"], [198, 97, 92, 119, 112, 78, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/699.png"], ["Refrigerate", "Snow Warning"]],
+["700", "Sylveon", ["Fairy"], [170, 85, 85, 130, 150, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/700.png"], ["Cute Charm", "Pixilate"]],
+["701", "Hawlucha", ["Fighting", "Flying"], [153, 112, 95, 94, 83, 138, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/701.png"], ["Limber", "Unburden"]],
+["701M", "Mega Hawlucha", ["Fighting", "Flying"], [153, 142, 105, 94, 83, 188, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/701_f2.png"], ["No Guard"]],
+["702", "Dedenne", ["Electric", "Fairy"], [142, 78, 77, 101, 87, 121, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/702.png"], ["Cheek Pouch", "Plus"]],
+["706", "Goodra", ["Dragon"], [165, 120, 90, 130, 170, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/706.png"], ["Sap Sipper", "Hydration"]],
+["707", "Klefki", ["Steel", "Fairy"], [132, 100, 111, 100, 107, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/707.png"], ["Prankster", "Magician"]],
+["709", "Trevenant", ["Ghost", "Grass"], [160, 130, 96, 85, 102, 58, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/709.png"], ["Natural Cure", "Frisk"]],
+["711", "Gourgeist", ["Ghost", "Grass"], [140, 110, 142, 78, 95, 104, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/711.png"], ["Pickup", "Frisk"]],
+["713", "Avalugg", ["Ice"], [170, 137, 204, 64, 66, 48, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/713.png"], ["Own Tempo", "Ice Body"]],
+["715", "Noivern", ["Flying", "Dragon"], [160, 90, 100, 117, 100, 143, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/715.png"], ["Frisk", "Infiltrator"]],
+["724", "Decidueye", ["Grass", "Ghost"], [153, 127, 95, 120, 120, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/724.png"], ["Overgrow", "Long Reach"]],
+["727", "Incineroar", ["Fire", "Dark"], [170, 135, 110, 100, 110, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/727.png"], ["Blaze", "Intimidate"]],
+["730", "Primarina", ["Water", "Fairy"], [155, 94, 94, 146, 136, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/730.png"], ["Torrent", "Liquid Voice"]],
+["745", "Lycanroc", ["Rock"], [150, 135, 85, 75, 85, 132, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/745.png"], ["Sand Rush", "Steadfast"]],
+["748", "Toxapex", ["Poison", "Water"], [125, 83, 172, 73, 162, 55, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/748.png"], ["Merciless", "Regenerator"]],
+["765", "Oranguru", ["Normal", "Psychic"], [165, 80, 100, 110, 130, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/765.png"], ["Inner Focus", "Telepathy"]],
+["778", "Mimikyu", ["Ghost", "Fairy"], [130, 110, 100, 70, 125, 116, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/778.png"], ["Disguise"]],
+["784", "Kommo-o", ["Dragon", "Fighting"], [150, 130, 145, 120, 125, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/784.png"], ["Bulletproof", "Soundproof"]],
+["823", "Corviknight", ["Flying", "Steel"], [173, 107, 125, 73, 105, 87, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/823.png"], ["Pressure", "Mirror Armor"]],
+["858", "Hatterene", ["Psychic", "Fairy"], [132, 110, 115, 156, 123, 49, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/858.png"], ["Healer", "Magic Bounce"]],
+["861", "Grimmsnarl", ["Dark", "Fairy"], [170, 140, 85, 115, 95, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/861.png"], ["Prankster", "Frisk"]],
+["887", "Dragapult", ["Dragon", "Ghost"], [163, 140, 95, 120, 95, 162, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/887.png"], ["Clear Body", "Infiltrator"]],
+["899", "Wyrdeer", ["Normal", "Psychic"], [179, 125, 92, 125, 95, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/899.png"], ["Intimidate", "Frisk"]],
+["902", "Basculegion", ["Water", "Ghost"], [195, 132, 85, 100, 95, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/902.png"], ["Rattled", "Adaptability"]],
+["903", "Sneasler", ["Fighting", "Poison"], [155, 150, 80, 60, 100, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/903.png"], ["Pressure", "Unburden"]],
+["909", "Meowscarada", ["Grass", "Dark"], [151, 130, 90, 101, 90, 143, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/909.png"], ["Overgrow", "Protean"]],
+["912", "Skeledirge", ["Fire", "Ghost"], [179, 95, 120, 130, 95, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/912.png"], ["Torrent", "Unaware"]],
+["915", "Quaquaval", ["Water", "Fighting"], [160, 140, 100, 105, 95, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/915.png"], ["Torrent", "Moxie"]],
+["925", "Maushold", ["Normal"], [149, 95, 90, 85, 95, 131, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/925.png"], ["Friend Guard", "Technician"]],
+["939", "Bellibolt", ["Electric"], [184, 84, 111, 123, 103, 65, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/939.png"], ["Electromorphosis", "Static"]],
+["968", "Orthworm", ["Steel"], [145, 105, 165, 80, 75, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/968.png"], ["Earth Eater", "Sand Veil"]],
+["970", "Glimmora", ["Rock", "Poison"], [158, 75, 110, 150, 101, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/970.png"], ["Toxic Debris", "Corrosion"]],
+["970M", "Mega Glimmora", ["Rock", "Poison"], [158, 75, 130, 210, 121, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/970_f2.png"], ["Corrosion"]],
+["979", "Annihilape", ["Fighting", "Ghost"], [185, 135, 100, 70, 110, 110, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/979.png"], ["Vital Spirit", "Inner Focus"]],
+["981", "Farigiraf", ["Normal", "Psychic"], [195, 110, 90, 130, 90, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/981.png"], ["Cud Chew", "Armor Tail"]],
+["983", "Kingambit", ["Dark", "Steel"], [175, 155, 140, 80, 105, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/983.png"], ["Defiant", "Supreme Overlord"]],
+["1000", "Gholdengo", ["Steel", "Ghost"], [162, 80, 115, 153, 111, 104, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/1000.png"], ["Good as Gold"]],
+["1013", "Sinistcha", ["Grass", "Ghost"], [146, 80, 126, 141, 100, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/1013.png"], ["Hospitality", "Heatproof"]],
+["1018", "Archaludon", ["Steel", "Dragon"], [165, 125, 150, 145, 85, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/1018.png"], ["Stamina", "Sturdy"]]
+];
+  
+/* =============================================================
+   DATA — GOLPES (seed curado)
+   [nome, tipo, categoria, poder, precisão, pp, efeito]
+============================================================= */
+  
+const MOVE_SEED = [
+["Tackle","Normal","Físico",40,100,35,"Investida corporal simples."],
+["Quick Attack","Normal","Físico",40,100,30,"Ataque de prioridade, sempre vai primeiro."],
+["Hyper Beam","Normal","Especial",150,90,5,"Dano altíssimo, usuário recarrega no turno seguinte."],
+["Giga Impact","Normal","Físico",150,90,5,"Investida poderosa, usuário recarrega depois."],
+["Facade","Normal","Físico",70,100,20,"Dobra de poder se o usuário estiver com problema de status."],
+["Protect","Normal","Status",0,100,10,"Protege o usuário de golpes neste turno."],
+["Substitute","Normal","Status",0,100,10,"Cria um substituto usando 1/4 do HP máximo."],
+["Rest","Psychic","Status",0,100,10,"Cura todo o HP e status, e o usuário dorme."],
+["Sleep Talk","Normal","Status",0,100,10,"Usa um golpe aleatório enquanto dorme."],
+["Swords Dance","Normal","Status",0,100,20,"Aumenta drasticamente o Ataque do usuário."],
+["Flamethrower","Fire","Especial",90,100,15,"Pode causar queimadura."],
+["Fire Blast","Fire","Especial",110,85,5,"Alta chance de queimadura."],
+["Flare Blitz","Fire","Físico",120,100,15,"Causa dano de recuo, pode queimar."],
+["Sunny Day","Fire","Status",0,100,5,"Intensifica o sol por 5 turnos."],
+["Hydro Pump","Water","Especial",110,80,5,"Jato de água muito forte."],
+["Surf","Water","Especial",90,100,15,"Atinge todos os alvos adjacentes em duplas."],
+["Scald","Water","Especial",80,100,15,"Pode causar queimadura no alvo."],
+["Ice Beam","Ice","Especial",90,100,10,"Pode congelar o alvo."],
+["Blizzard","Ice","Especial",110,70,5,"Pode congelar; nunca erra na neve/granizo."],
+["Icy Wind","Ice","Especial",55,95,15,"Reduz a Velocidade dos oponentes."],
+["Thunderbolt","Electric","Especial",90,100,15,"Pode paralisar o alvo."],
+["Thunder","Electric","Especial",110,70,10,"Alta chance de paralisar; nunca erra na chuva."],
+["Volt Switch","Electric","Especial",70,100,20,"Causa dano e troca o usuário."],
+["Energy Ball","Grass","Especial",90,100,10,"Pode reduzir o Sp. Def do alvo."],
+["Leaf Storm","Grass","Especial",130,90,5,"Reduz drasticamente o Sp. Atk do usuário."],
+["Giga Drain","Grass","Especial",75,100,10,"Recupera metade do dano causado como HP."],
+["Close Combat","Fighting","Físico",120,100,5,"Reduz a Defesa e Sp. Def do usuário."],
+["Drain Punch","Fighting","Físico",75,100,10,"Recupera metade do dano causado como HP."],
+["Aura Sphere","Fighting","Especial",80,"—",20,"Nunca erra."],
+["Sludge Bomb","Poison","Especial",90,100,10,"Pode envenenar o alvo."],
+["Toxic","Poison","Status",0,90,10,"Envenena gravemente o alvo."],
+["Earthquake","Ground","Físico",100,100,10,"Atinge todos no campo, exceto voadores."],
+["Stealth Rock","Rock","Status",0,100,20,"Coloca rochas no campo do oponente."],
+["Stone Edge","Rock","Físico",100,80,5,"Alta taxa de acerto crítico."],
+["Rock Slide","Rock","Físico",75,90,10,"Pode causar flinch."],
+["Brave Bird","Flying","Físico",120,100,15,"Causa dano de recuo ao usuário."],
+["Hurricane","Flying","Especial",110,70,10,"Pode confundir; nunca erra na chuva."],
+["Tailwind","Flying","Status",0,100,15,"Dobra a Velocidade da equipe por 4 turnos."],
+["Psychic","Psychic","Especial",90,100,10,"Pode reduzir o Sp. Def do alvo."],
+["Psyshock","Psychic","Especial",80,100,10,"Dano calculado contra a Defesa física do alvo."],
+["Trick Room","Psychic","Status",0,"—",5,"Inverte a ordem de velocidade por 5 turnos."],
+["Calm Mind","Psychic","Status",0,100,20,"Aumenta Sp. Atk e Sp. Def do usuário."],
+["X-Scissor","Bug","Físico",80,100,15,"Corte cruzado básico do tipo Inseto."],
+["U-turn","Bug","Físico",70,100,20,"Causa dano e troca o usuário."],
+["Shadow Ball","Ghost","Especial",80,100,15,"Pode reduzir o Sp. Def do alvo."],
+["Shadow Sneak","Ghost","Físico",40,100,30,"Golpe de prioridade."],
+["Dragon Claw","Dragon","Físico",80,100,15,"Ataque físico confiável do tipo Dragão."],
+["Draco Meteor","Dragon","Especial",130,90,5,"Reduz drasticamente o Sp. Atk do usuário."],
+["Dragon Dance","Dragon","Status",0,100,20,"Aumenta Ataque e Velocidade do usuário."],
+["Sucker Punch","Dark","Físico",70,100,5,"Prioridade, falha se o alvo não for atacar."],
+["Knock Off","Dark","Físico",65,100,20,"Aumenta poder se remover o item do alvo."],
+["Iron Head","Steel","Físico",80,100,15,"Pode causar flinch."],
+["Flash Cannon","Steel","Especial",80,100,10,"Pode reduzir o Sp. Def do alvo."],
+["Moonblast","Fairy","Especial",95,100,15,"Pode reduzir o Sp. Atk do alvo."],
+["Play Rough","Fairy","Físico",90,90,10,"Pode reduzir o Ataque do alvo."],
+["Recover","Normal","Status",0,100,10,"Recupera metade do HP máximo do usuário."],
+["Will-O-Wisp","Fire","Status",0,85,15,"Causa queimadura no alvo."],
+["Thunder Wave","Electric","Status",0,90,20,"Paraliza o alvo."],
+["Spore","Grass","Status",0,100,15,"Faz o alvo dormir; nunca erra."],
+["Roost","Flying","Status",0,100,10,"Recupera metade do HP; perde tipo Voador no turno."],
+["Taunt","Dark","Status",0,100,20,"Impede o alvo de usar golpes de status."],
+["Encore","Normal","Status",0,100,5,"Força o alvo a repetir o último golpe."],
+];
+
+/* =============================================================
+   DATA — HABILIDADES (seed curado)
+============================================================= */
+const ABILITY_SEED = [
+["Overgrow","Aumenta o poder de golpes do tipo Planta quando o HP está baixo."],
+["Blaze","Aumenta o poder de golpes do tipo Fogo quando o HP está baixo."],
+["Torrent","Aumenta o poder de golpes do tipo Água quando o HP está baixo."],
+["Intimidate","Reduz o Ataque dos oponentes ao entrar em campo."],
+["Levitate","Concede imunidade a golpes do tipo Terra."],
+["Sturdy","Impede que o Pokémon seja nocauteado de um golpe com HP cheio."],
+["Static","Pode paralisar o oponente ao entrar em contato."],
+["Synchronize","Reflete condições de status causadas por oponentes."],
+["Mold Breaker","Ignora habilidades defensivas do oponente."],
+["Drought","Intensifica o sol ao entrar em campo."],
+["Drizzle","Invoca chuva ao entrar em campo."],
+["Sand Stream","Invoca tempestade de areia ao entrar em campo."],
+["Snow Warning","Invoca neve/granizo ao entrar em campo."],
+["Speed Boost","Aumenta a Velocidade a cada turno."],
+["Adaptability","Aumenta o bônus de STAB de 1.5x para 2x."],
+["Technician","Aumenta o poder de golpes fracos (60 ou menos de poder base)."],
+["Multiscale","Reduz o dano recebido quando o HP está cheio."],
+["Regenerator","Recupera HP ao ser trocado para fora de batalha."],
+["Protean","Muda o tipo do usuário para o tipo do golpe usado."],
+["Guts","Aumenta o Ataque quando afetado por uma condição de status."],
+["Unaware","Ignora mudanças de stat do oponente ao calcular dano."],
+["Magic Bounce","Reflete golpes de status de volta ao usuário original."],
+["Trace","Copia a habilidade de um oponente ao entrar em campo."],
+["Water Absorb","Cura HP ao ser atingido por golpes do tipo Água."],
+["Volt Absorb","Cura HP ao ser atingido por golpes do tipo Elétrico."],
+["Flash Fire","Absorve golpes de Fogo e aumenta o próprio poder de Fogo."],
+["Pressure","Faz o oponente gastar PP extra ao usar golpes contra o usuário."],
+["Rough Skin","Causa dano de contato a quem atacar fisicamente o usuário."],
+["Moxie","Aumenta o Ataque após nocautear um oponente."],
+["Gale Wings","Concede prioridade a golpes do tipo Voador com HP cheio."],
+["Sand Rush","Dobra a Velocidade durante tempestade de areia."],
+["Thick Fat","Reduz o dano recebido de golpes de Fogo e Gelo."],
+["Clear Body","Impede que o oponente reduza os stats do usuário."],
+["No Guard","Garante que todos os golpes (do usuário e do oponente) acertem."],
+["Cursed Body","Pode desabilitar o golpe usado contra o usuário."],
+["Stance Change","Muda de forma ao usar golpe de ataque ou King's Shield."],
+["Good as Gold","Imune a golpes de status de outros Pokémon."],
+["Contrary","Inverte o efeito de mudanças de stat."],
+["Unseen Fist","Golpes de contato ignoram efeitos de Protect."],
+["Grassy Surge","Cria Terreno Gramado ao entrar em campo."],
+["Libero","Muda o tipo do usuário para o tipo do golpe usado."],
+];
+
+/* =============================================================
+   DATA — ITENS (seed curado)
+============================================================= */
+const ITEM_SEED = [
+["Occa Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Fogo."],
+["Passho Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Água."],
+["Wacan Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Elétrico."],
+["Rindo Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Planta."],
+["Yache Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Gelo."],
+["Chople Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Lutador."],
+["Kebia Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Venenoso."],
+["Shuca Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Terra."],
+["Coba Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Voador."],
+["Payapa Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Psíquico."],
+["Tanga Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Inseto."],
+["Charti Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Pedra."],
+["Kasib Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Fantasma."],
+["Haban Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Dragão."],
+["Colbur Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Sombrio."],
+["Babiri Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Aço."],
+["Roseli Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Fada."],
+["Focus Sash","Defesa","Permite sobreviver com 1 HP a um golpe que nocautearia com HP cheio."],
+["Focus Band","Sobrevivência","Cerca de 10% de chance de sobreviver com 1 HP a um golpe que nocautearia."],
+["Silk Scarf","Poder","Aumenta o poder de golpes do tipo Normal."],
+["Charcoal","Poder","Aumenta o poder de golpes do tipo Fogo."],
+["Mystic Water","Poder","Aumenta o poder de golpes do tipo Água."],
+["Magnet","Poder","Aumenta o poder de golpes do tipo Elétrico."],
+["Miracle Seed","Poder","Aumenta o poder de golpes do tipo Planta."],
+["Never-Melt Ice","Poder","Aumenta o poder de golpes do tipo Gelo."],
+["Black Belt","Poder","Aumenta o poder de golpes do tipo Lutador."],
+["Poison Barb","Poder","Aumenta o poder de golpes do tipo Venenoso."],
+["Soft Sand","Poder","Aumenta o poder de golpes do tipo Terra."],
+["Sharp Beak","Poder","Aumenta o poder de golpes do tipo Voador."],
+["Twisted Spoon","Poder","Aumenta o poder de golpes do tipo Psíquico."],
+["Silver Powder","Poder","Aumenta o poder de golpes do tipo Inseto."],
+["Hard Stone","Poder","Aumenta o poder de golpes do tipo Pedra."],
+["Spell Tag","Poder","Aumenta o poder de golpes do tipo Fantasma."],
+["Dragon Fang","Poder","Aumenta o poder de golpes do tipo Dragão."],
+["Black Glasses","Poder","Aumenta o poder de golpes do tipo Sombrio."],
+["Metal Coat","Poder","Aumenta o poder de golpes do tipo Aço."],
+["Pixie Plate","Poder","Aumenta o poder de golpes do tipo Fada."],
+["Expert Belt","Poder","Aumenta o poder de golpes supereficazes em 20%."],
+["Life Orb","Poder","Aumenta o poder dos golpes em 30%, mas causa recuo de 10% do HP."],
+["Muscle Band","Poder","Aumenta o poder de golpes físicos em 10%."],
+["Wise Glasses","Poder","Aumenta o poder de golpes especiais em 10%."],
+["Choice Band","Poder","Aumenta o Ataque em 50%, mas trava o usuário em um único golpe."],
+["Choice Specs","Poder","Aumenta o Sp. Atk em 50%, mas trava o usuário em um único golpe."],
+["Weakness Policy","Poder","Aumenta drasticamente Ataque e Sp. Atk ao ser atingido por golpe supereficaz."],
+["Leftovers","Recuperação","Recupera 1/16 do HP máximo a cada turno."],
+["Sitrus Berry","Recuperação · Berry","Recupera 25% do HP máximo quando o HP fica abaixo de 50%."],
+["Big Root","Recuperação","Aumenta o HP recuperado por golpes de dreno."],
+["Lum Berry","Cura","Cura qualquer condição de status ou confusão."],
+["Damp Rock","Clima","Estende a duração da chuva por mais turnos."],
+["Heat Rock","Clima","Estende a duração do sol forte por mais turnos."],
+["Smooth Rock","Clima","Estende a duração da tempestade de areia."],
+["Icy Rock","Clima","Estende a duração da neve."],
+["Iron Ball","Características","Reduz a Velocidade em 50%. Prende o usuário no chão e remove sua imunidade a Terra, Pontas, Pontas Tóxicas e Rede Pegajosa."],
+["Wide Lens","Características","Aumenta ligeiramente a precisão dos golpes."],
+["Zoom Lens","Características","Aumenta a precisão se o usuário agir depois do oponente."],
+["Mental Herb","Características","Remove efeitos como Encore, Taunt e Infatuation."],
+["White Herb","Características","Restaura as características do portador que foram reduzidas."],
+["Choice Scarf","Características","Aumenta a Velocidade em 50%, mas trava o usuário em um único golpe."],
+["Bright Powder","Características","Reduz levemente a precisão dos golpes do oponente."],
+["Scope Lens","Características","Aumenta a chance de desferir acertos críticos."],
+["Rocky Helmet","Punição","Causa dano de recuo a quem atacar o usuário por contato."],
+["Assault Vest","Defesa","Aumenta o Sp. Def em 50%, mas impede o uso de golpes de status."],
+["Eviolite","Defesa","Aumenta Defesa e Sp. Def de Pokémon que ainda podem evoluir."],
+["Air Balloon","Imunidade","Concede imunidade a golpes de Terra até ser atingido."],
+["Toxic Orb","Status","Envenena gravemente o usuário ao final do turno."],
+["Flame Orb","Status","Causa queimadura no usuário ao final do turno."]
+];
+
+/* =============================================================
+   STORAGE / STATE
+============================================================= */
+const NATURES = [
+ ["Hardy",null,null],["Lonely","Atk","Def"],["Brave","Atk","Spe"],["Adamant","Atk","SpA"],["Naughty","Atk","SpD"],
+ ["Bold","Def","Atk"],["Docile",null,null],["Relaxed","Def","Spe"],["Impish","Def","SpA"],["Lax","Def","SpD"],
+ ["Timid","Spe","Atk"],["Hasty","Spe","Def"],["Serious",null,null],["Jolly","Spe","SpA"],["Naive","Spe","SpD"],
+ ["Modest","SpA","Atk"],["Mild","SpA","Def"],["Quiet","SpA","Spe"],["Bashful",null,null],["Rash","SpA","SpD"],
+ ["Calm","SpD","Atk"],["Gentle","SpD","Def"],["Sassy","SpD","Spe"],["Careful","SpD","SpA"],["Quirky",null,null],
+];
+const STAT_KEYS=["hp","atk","def","spa","spd","spe"];
+const STAT_LABEL={hp:"HP",atk:"Atk",def:"Def",spa:"Sp.Atk",spd:"Sp.Def",spe:"Spe"};
+
+const SEED_VERSION = 3; // bump this whenever POKE_SEED/ITEM_SEED CONTENT changes so saved data refreshes
+
+let DB = { pokemon: [...POKE_SEED], moves:[...MOVE_SEED], abilities:[...ABILITY_SEED], items:[...ITEM_SEED], teams: [], siteName: 'CHAMPION DEX', ownerHash: null, seedVersion: SEED_VERSION };
+let isOwner = false;
+
+// migrate pokemon entries from the old [num,name,types,stats,abilities,image] shape
+// to the new shape where the image lives inside stats as a 7th value: [HP,Atk,Def,SpA,SpD,Spe,linkimg]
+// runs unconditionally (independent of SEED_VERSION) so nobody's saved images get lost
+function migratePokeImages(list){
+  list.forEach(p=>{
+    if(p.length>5 && p[5] && !p[3][6]) p[3][6] = p[5];
+    if(p.length>5) p.length = 5;
+  });
+  return list;
+}
+
+function applyLoaded(saved){
+  const savedVersion = saved.seedVersion || 0;
+  const needsPokeRefresh = savedVersion < SEED_VERSION;
+  DB.pokemon = migratePokeImages((!needsPokeRefresh && saved.pokemon && saved.pokemon.length) ? saved.pokemon : [...POKE_SEED]);
+  DB.items = (!needsPokeRefresh && saved.items && saved.items.length) ? saved.items : [...ITEM_SEED];
+  DB.moves = saved.moves && saved.moves.length ? saved.moves : [...MOVE_SEED];
+  DB.abilities = saved.abilities && saved.abilities.length ? saved.abilities : [...ABILITY_SEED];
+  DB.teams = saved.teams || [];
+  DB.siteName = saved.siteName || 'CHAMPION DEX';
+  DB.ownerHash = saved.ownerHash || null;
+  DB.seedVersion = SEED_VERSION;
+}
+
+async function loadDB(){
+  let personalData = null;
+  try{ const r = await window.storage.get('champion-dex-db', false); if(r && r.value) personalData = JSON.parse(r.value); }catch(e){}
+  if(personalData){
+    const wasOutdated = (personalData.seedVersion||0) < SEED_VERSION;
+    applyLoaded(personalData);
+    if(wasOutdated) await saveDB(); // persist the refreshed pokemon/items right away
+  }
+}
+async function saveDB(){
+  try{ await window.storage.set('champion-dex-db', JSON.stringify(DB), false); }
+  catch(e){ console.error('Erro ao salvar', e); }
+}
+async function sha256(text){
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function getLocalOwnerToken(){
+  try{ const r = await window.storage.get('champion-dex-owner-token', false); return r?r.value:null; }catch(e){ return null; }
+}
+async function setLocalOwnerToken(token){
+  try{ await window.storage.set('champion-dex-owner-token', token, false); }catch(e){}
+}
+async function clearLocalOwnerToken(){
+  try{ await window.storage.delete('champion-dex-owner-token', false); }catch(e){}
+}
+
+async function checkOwnerStatus(){
+  if(!DB.ownerHash){
+    openOwnerSetupModal();
+    return;
+  }
+  const token = await getLocalOwnerToken();
+  isOwner = !!(token && token === DB.ownerHash);
+  applyOwnerUI();
+}
+
+function openOwnerSetupModal(){
+  openModal(`
+    <h2>Configurar este blog</h2>
+    <p style="color:var(--muted);font-size:13px;">Ninguém reivindicou a edição deste Champion Dex ainda. Defina uma senha de dono agora — só quem souber essa senha vai poder editar Pokémons, times, golpes, habilidades e itens. Qualquer outra pessoa que abrir este link poderá apenas visualizar.</p>
+    <div class="form-grid">
+      <div class="form-full"><label>Senha de dono</label><input type="password" id="ownerPass1"></div>
+      <div class="form-full"><label>Confirmar senha</label><input type="password" id="ownerPass2"></div>
+    </div>
+    <p style="color:var(--muted);font-size:11px;margin-top:10px;">⚠️ Isso roda só no navegador (sem servidor próprio), então é uma trava simples — o suficiente para o dia a dia, mas não é segurança de nível bancário.</p>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn secondary" onclick="closeModal()">Agora não (ver como visitante)</button>
+      <button class="btn" onclick="submitOwnerSetup()">Virar dono</button>
+    </div>
+  `);
+}
+async function submitOwnerSetup(){
+  const p1 = document.getElementById('ownerPass1').value;
+  const p2 = document.getElementById('ownerPass2').value;
+  if(!p1 || p1.length<4){ alert('Use uma senha com pelo menos 4 caracteres.'); return; }
+  if(p1!==p2){ alert('As senhas não conferem.'); return; }
+  const hash = await sha256(p1);
+  DB.ownerHash = hash;
+  await saveDB();
+  await setLocalOwnerToken(hash);
+  isOwner = true;
+  closeModal();
+  applyOwnerUI();
+  renderEverything();
+}
+function openOwnerLoginModal(){
+  openModal(`
+    <h2>Entrar como dono</h2>
+    <div class="form-grid"><div class="form-full"><label>Senha</label><input type="password" id="ownerLoginPass"></div></div>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn" onclick="submitOwnerLogin()">Entrar</button>
+    </div>
+  `);
+}
+async function submitOwnerLogin(){
+  const p = document.getElementById('ownerLoginPass').value;
+  const hash = await sha256(p||'');
+  if(hash !== DB.ownerHash){ alert('Senha incorreta.'); return; }
+  await setLocalOwnerToken(hash);
+  isOwner = true;
+  closeModal();
+  applyOwnerUI();
+  renderEverything();
+}
+async function ownerLogout(){
+  await clearLocalOwnerToken();
+  isOwner = false;
+  applyOwnerUI();
+  renderEverything();
+}
+function applyOwnerUI(){
+  document.body.classList.toggle('is-owner', isOwner);
+  const loginBtn = document.getElementById('btnOwnerLogin');
+  const logoutBtn = document.getElementById('btnOwnerLogout');
+  const badge = document.getElementById('ownerBadge');
+  if(loginBtn) loginBtn.style.display = isOwner ? 'none' : 'block';
+  if(logoutBtn) logoutBtn.style.display = isOwner ? 'block' : 'none';
+  if(badge) badge.textContent = isOwner ? 'Modo dono ativo' : 'Modo visitante (somente leitura)';
+  const brand = document.getElementById('brandName');
+  if(brand) brand.contentEditable = isOwner ? 'true' : 'false';
+}
+function renderEverything(){
+  renderPokeGrid(); renderTypeChart(); renderMoveTable(); renderAbilityTable();
+  populateItemCatFilter(); renderItemTable(); renderTeamsList();
+}
+
+/* ---------- Export / Import backup ---------- */
+function exportBackup(){
+  const blob = new Blob([JSON.stringify(DB, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'champion-dex-backup.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function triggerImport(){ document.getElementById('importFileInput').click(); }
+async function handleImportFile(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  try{
+    const text = await file.text();
+    const data = JSON.parse(text);
+    if(!confirm('Importar este arquivo vai SUBSTITUIR todos os dados atuais do blog (Pokémons, times, golpes, habilidades, itens). Continuar?')) return;
+    const keepHash = DB.ownerHash;
+    applyLoaded(data);
+    if(!data.ownerHash) DB.ownerHash = keepHash; // don't lose ownership if backup predates the owner system
+    await saveDB();
+    renderEverything();
+    alert('Backup importado com sucesso!');
+  }catch(e){ alert('Não foi possível ler esse arquivo. Confirme que é um backup exportado por este site.'); }
+  evt.target.value = '';
+}
+
+/* =============================================================
+   HELPERS
+============================================================= */
+function typeColor(t){ return `var(--t-${t.toLowerCase()})`; }
+function typeBadge(t){ return `<span class="tbadge" style="background:${typeColor(t)}">${TYPE_PT[t]||t}</span>`; }
+function bst(stats){ return stats.slice(0,6).reduce((a,b)=>a+(Number(b)||0),0); }
+function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,'-'); }
+
+function calcFinalStat(base, trainPts, level, natureMod, isHP){
+  trainPts = Math.min(32, Math.max(0, trainPts||0));
+  if(isHP) return Math.floor(((2*base+trainPts)*level)/100) + level + 10;
+  let val = Math.floor(((2*base+trainPts)*level)/100) + 5;
+  return Math.floor(val*natureMod);
+}
+// Mega evolution helpers: a mega's dex num is baseNum + "M" / "MX" / "MY"
+function baseNumOf(num){ const m = String(num).match(/^(\d+)(M[XY]?)$/); return m ? m[1] : null; }
+function isMegaNum(num){ return baseNumOf(num) !== null; }
+function getMegasFor(baseNum){ return DB.pokemon.filter(p => baseNumOf(p[0]) === String(baseNum)); }
+
+/* =============================================================
+   NAV
+============================================================= */
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('view-'+btn.dataset.view).classList.add('active');
+  });
+});
+
+function closeModal(){ document.getElementById('modalBg').classList.remove('active'); }
+document.getElementById('modalBg').addEventListener('click',e=>{ if(e.target.id==='modalBg') closeModal(); });
+function openModal(html){
+  document.getElementById('modalBody').innerHTML = `<button class="close" onclick="closeModal()">✕</button>` + html;
+  document.getElementById('modalBg').classList.add('active');
+}
+
+/* =============================================================
+   POKEMONS VIEW
+============================================================= */
+function populateTypeFilter(sel){
+  const el = document.getElementById(sel);
+  TYPES.forEach(t=>{
+    const o=document.createElement('option'); o.value=t; o.textContent=TYPE_PT[t];
+    el.appendChild(o);
+  });
+}
+populateTypeFilter('pokeTypeFilter');
+populateTypeFilter('moveTypeFilter');
+
+let pokeSelectMode = false;
+let pokeSelected = new Set();
+
+function renderPokeGrid(){
+  const search = document.getElementById('pokeSearch').value.toLowerCase();
+  const typeF = document.getElementById('pokeTypeFilter').value;
+  const sortBy = document.getElementById('pokeSort').value;
+  let list = DB.pokemon.filter(p=>{
+    const [num,name,types] = p;
+    if(isMegaNum(num)) return false; // megas only appear via the mega-stone icon
+    if(search && !name.toLowerCase().includes(search)) return false;
+    if(typeF && !types.includes(typeF)) return false;
+    return true;
+  });
+  if(sortBy==='name') list.sort((a,b)=>a[1].localeCompare(b[1]));
+  else if(sortBy==='bst') list.sort((a,b)=>bst(b[3])-bst(a[3]));
+  else list.sort((a,b)=>(parseInt(a[0],10)||0)-(parseInt(b[0],10)||0));
+
+  const baseCount = DB.pokemon.filter(p=>!isMegaNum(p[0])).length;
+  const megaCount = DB.pokemon.length - baseCount;
+  document.getElementById('pokeCount').textContent = baseCount + ' registrados' + (megaCount?` · ${megaCount} Mega`:'');
+  const grid = document.getElementById('pokeGrid');
+  if(!list.length){ grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="big">◈</div>Nenhum Pokémon encontrado.</div>`; return; }
+  grid.innerHTML = list.map(p=>{
+    const [num,name,types,stats,abilities] = p;
+    const image = stats[6];
+    const total = bst(stats);
+    const pct = Math.min(100, Math.round(total/720*100));
+    const imgHtml = pokeSelectMode ? (image
+      ? `<img src="${image}" alt="${name}" style="width:100%;height:110px;object-fit:contain;background:var(--panel2);border-radius:8px;margin-bottom:8px;" onerror="this.style.display='none'">`
+      : `<div style="width:100%;height:60px;display:flex;align-items:center;justify-content:center;background:var(--panel2);border-radius:8px;margin-bottom:8px;color:var(--muted);font-size:11px;">sem imagem</div>`)
+    : (image
+      ? `<img src="${image}" alt="${name}" title="Clique para trocar a imagem" style="width:100%;height:110px;object-fit:contain;background:var(--panel2);border-radius:8px;margin-bottom:8px;cursor:pointer;" onerror="this.style.display='none'" onclick='event.stopPropagation(); quickSetImage(${JSON.stringify(num)});'>`
+      : `<div title="Clique para adicionar uma imagem" style="width:100%;height:60px;display:flex;align-items:center;justify-content:center;background:var(--panel2);border-radius:8px;margin-bottom:8px;color:var(--muted);font-size:11px;cursor:pointer;" onclick='event.stopPropagation(); quickSetImage(${JSON.stringify(num)});'>+ adicionar imagem</div>`);
+    const isSel = pokeSelected.has(String(num));
+    const megaHtml = (!pokeSelectMode && getMegasFor(num).length) ? `<div class="mega-row">${getMegasFor(num).map(mg=>{
+      const suffix = mg[0].endsWith('MX')?'X':mg[0].endsWith('MY')?'Y':'';
+      return `<div class="mega-stone" title="Mega Evolução${suffix?' '+suffix:''}" onclick='event.stopPropagation(); openPokeDetail(${JSON.stringify(mg[0])});'><span>${suffix||'M'}</span></div>`;
+    }).join('')}</div>` : '';
+    const cardClick = pokeSelectMode ? `togglePokeSelect(${JSON.stringify(String(num))})` : `openPokeDetail(${JSON.stringify(num)})`;
+    return `<div class="pcard ${pokeSelectMode?'selectable':''} ${isSel?'selected':''}" onclick='${cardClick}'>
+      ${pokeSelectMode?`<div class="select-check">${isSel?'✓':''}</div>`:''}
+      ${imgHtml}
+      <div class="num">#${num}</div>
+      <h3>${name}</h3>
+      <div class="types">${types.map(typeBadge).join('')}</div>
+      ${megaHtml}
+      <div class="bst-bar"><i style="width:${pct}%"></i></div>
+      <div class="bst-label"><span>BST</span><span>${total}</span></div>
+    </div>`;
+  }).join('');
+}
+function setPokeSelectMode(on){
+  pokeSelectMode = on;
+  pokeSelected.clear();
+  const btn = document.getElementById('btnTogglePokeSelect');
+  btn.textContent = on ? 'Cancelar seleção' : 'Remover';
+  document.getElementById('pokeSelectHint').classList.toggle('active', on);
+  updateDeleteSelectedPokeBtn();
+  renderPokeGrid();
+}
+function togglePokeSelect(num){
+  if(pokeSelected.has(num)) pokeSelected.delete(num); else pokeSelected.add(num);
+  updateDeleteSelectedPokeBtn();
+  renderPokeGrid();
+}
+function updateDeleteSelectedPokeBtn(){
+  const btn = document.getElementById('btnDeleteSelectedPoke');
+  if(pokeSelectMode && pokeSelected.size>0){ btn.style.display='inline-block'; btn.textContent = `Excluir (${pokeSelected.size})`; }
+  else btn.style.display='none';
+}
+document.getElementById('btnTogglePokeSelect').addEventListener('click',()=> setPokeSelectMode(!pokeSelectMode));
+document.getElementById('btnDeleteSelectedPoke').addEventListener('click', async ()=>{
+  if(!pokeSelected.size) return;
+  if(!confirm(`Remover ${pokeSelected.size} Pokémon selecionado(s) da Dex?`)) return;
+  DB.pokemon = DB.pokemon.filter(p=>!pokeSelected.has(String(p[0])));
+  await saveDB();
+  setPokeSelectMode(false);
+  refreshBuilderPokeOptions();
+});
+['pokeSearch','pokeTypeFilter','pokeSort'].forEach(id=>document.getElementById(id).addEventListener('input',renderPokeGrid));
+
+function openPokeDetail(num){
+  const p = DB.pokemon.find(x=>String(x[0])===String(num));
+  if(!p) return;
+  const [pnum,name,types,stats,abilities] = p;
+  const image = stats[6];
+  const maxStat = 200;
+  const statHtml = STAT_KEYS.map((k,i)=>{
+    const v = stats[i];
+    const pct = Math.min(100, Math.round(v/maxStat*100));
+    const col = v>=100?'var(--gold)':v>=70?'#8fbf6a':'var(--crimson)';
+    return `<div class="stat-row"><span>${STAT_LABEL[k]}</span><div class="bar"><i style="width:${pct}%;background:${col}"></i></div><span>${v}</span></div>`;
+  }).join('');
+
+  // type matchup vs this pokemon
+  const weak=[],resist=[],immune=[];
+  TYPES.forEach(t=>{
+    const m = eff(t, types[0], types[1]);
+    if(m>1) weak.push(t); else if(m>0 && m<1) resist.push(t); else if(m===0) immune.push(t);
+  });
+
+  const megasHere = isMegaNum(pnum) ? [] : getMegasFor(pnum);
+  const megaHtml = megasHere.length ? `<div class="mega-row">${megasHere.map(mg=>{
+    const suffix = mg[0].endsWith('MX')?'X':mg[0].endsWith('MY')?'Y':'';
+    return `<div class="mega-stone" title="Mega Evolução${suffix?' '+suffix:''}" onclick='openPokeDetail(${JSON.stringify(mg[0])});'><span>${suffix||'M'}</span></div>`;
+  }).join('')}</div>` : '';
+
+  openModal(`
+    ${isMegaNum(pnum) ? `<button class="mega-back" onclick='openPokeDetail(${JSON.stringify(baseNumOf(pnum))})'>← Voltar para forma base</button>` : ''}
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;">
+      <div>
+        <div style="font-family:var(--mono);color:var(--muted);font-size:12px;">#${pnum}</div>
+        <h2>${name}</h2>
+        <div class="types" style="margin:6px 0 8px;">${types.map(typeBadge).join('')}</div>
+        ${megaHtml}
+      </div>
+      <div style="display:flex;gap:8px;flex-shrink:0;">
+        <button class="btn secondary small" onclick='openEditPoke(${JSON.stringify(pnum)})'>Editar</button>
+      </div>
+    </div>
+    ${image?`<img src="${image}" alt="${name}" style="width:100%;max-height:220px;object-fit:contain;background:var(--panel2);border-radius:10px;margin-bottom:14px;" onerror="this.style.display='none'">`:''}
+    <div style="font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:700;">STATUS BASE (BST ${bst(stats)})</div>
+    ${statHtml}
+    <div style="margin-top:16px;font-size:12px;color:var(--muted);font-weight:700;">HABILIDADES</div>
+    <div style="margin-top:6px;">${abilities.map(a=>`<span class="pill" style="margin-right:6px;">${a}</span>`).join('')}</div>
+    <div style="margin-top:16px;font-size:12px;color:var(--muted);font-weight:700;">FRAQUEZAS</div>
+    <div style="margin:6px 0;">${weak.length? weak.map(typeBadge).join('') : '<span style="color:var(--muted);font-size:12px;">Nenhuma</span>'}</div>
+    <div style="margin-top:10px;font-size:12px;color:var(--muted);font-weight:700;">RESISTÊNCIAS</div>
+    <div style="margin:6px 0;">${resist.length? resist.map(typeBadge).join('') : '<span style="color:var(--muted);font-size:12px;">Nenhuma</span>'}</div>
+    ${immune.length? `<div style="margin-top:10px;font-size:12px;color:var(--muted);font-weight:700;">IMUNIDADES</div><div style="margin:6px 0;">${immune.map(typeBadge).join('')}</div>` : ''}
+  `);
+}
+async function deletePoke(num){
+  if(!confirm('Remover este Pokémon da sua Dex?')) return;
+  DB.pokemon = DB.pokemon.filter(p=>String(p[0])!==String(num));
+  await saveDB(); closeModal(); renderPokeGrid(); refreshBuilderPokeOptions();
+}
+
+let editingPokeNum = null;
+document.getElementById('btnAddPoke').addEventListener('click',()=>{ editingPokeNum = null; openPokeForm(); });
+function openEditPoke(num){ editingPokeNum = num; openPokeForm(DB.pokemon.find(x=>String(x[0])===String(num))); }
+function openPokeForm(existing){
+  const p = existing || [ '', '', ['Normal'], [60,60,60,60,60,60], [] ];
+  const [num,name,types,stats,abilities] = p;
+  const image = stats[6];
+  openModal(`
+    <h2>${existing?'Editar':'Adicionar'} Pokémon</h2>
+    <div class="form-grid">
+      <div><label>Número (Dex)</label><input type="text" id="npNum" value="${num}" placeholder="ex: 900" ${existing?'disabled':''}></div>
+      <div style="grid-column:1/-1;margin-top:-6px;"><small style="color:var(--muted);font-size:10.5px;">Dica: para criar uma Mega Evolução de um Pokémon já existente, use o número dele + "M" (ex: base "306" → mega "306M"; ou "MX"/"MY" para formas X/Y como "006MX"). O ícone de pedra vai aparecer automaticamente no card da forma base.</small></div>
+      <div><label>Nome</label><input type="text" id="npName" value="${name}" placeholder="ex: Meu Pokémon"></div>
+      <div><label>Tipo 1</label><select id="npType1">${TYPES.map(t=>`<option value="${t}" ${types[0]===t?'selected':''}>${TYPE_PT[t]}</option>`).join('')}</select></div>
+      <div><label>Tipo 2 (opcional)</label><select id="npType2"><option value="">—</option>${TYPES.map(t=>`<option value="${t}" ${types[1]===t?'selected':''}>${TYPE_PT[t]}</option>`).join('')}</select></div>
+      <div><label>HP</label><input type="number" id="npHP" value="${stats[0]}"></div>
+      <div><label>Ataque</label><input type="number" id="npAtk" value="${stats[1]}"></div>
+      <div><label>Defesa</label><input type="number" id="npDef" value="${stats[2]}"></div>
+      <div><label>Sp. Atk</label><input type="number" id="npSpA" value="${stats[3]}"></div>
+      <div><label>Sp. Def</label><input type="number" id="npSpD" value="${stats[4]}"></div>
+      <div><label>Velocidade</label><input type="number" id="npSpe" value="${stats[5]}"></div>
+      <div class="form-full"><label>Habilidades (separadas por vírgula)</label><input type="text" id="npAbilities" value="${(abilities||[]).join(', ')}" placeholder="ex: Overgrow, Chlorophyll"></div>
+      <div class="form-full"><label>URL da imagem (link direto para .png/.jpg/.gif)</label><input type="text" id="npImage" value="${image||''}" placeholder="https://exemplo.com/imagem.png"></div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn" onclick="saveNewPoke()">Salvar</button>
+    </div>
+  `);
+}
+function quickSetImage(num){
+  const p = DB.pokemon.find(x=>String(x[0])===String(num));
+  if(!p) return;
+  const currentImg = p[3][6];
+  openModal(`
+    <h2>Imagem — ${p[1]}</h2>
+    <p style="color:var(--muted);font-size:12.5px;margin:4px 0 12px;">Cole o link direto da imagem (termina em .png, .jpg, .gif...).</p>
+    <input type="text" id="quickImgUrl" value="${currentImg||''}" placeholder="https://exemplo.com/imagem.png" style="width:100%;" autofocus>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
+      ${currentImg?`<button class="btn danger small" onclick='quickSaveImage(${JSON.stringify(num)}, true)'>Remover imagem</button>`:''}
+      <button class="btn secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn" onclick='quickSaveImage(${JSON.stringify(num)}, false)'>Salvar</button>
+    </div>
+  `);
+  setTimeout(()=>{
+    const inp = document.getElementById('quickImgUrl');
+    if(inp){ inp.focus(); inp.select(); inp.addEventListener('keydown', e=>{ if(e.key==='Enter') quickSaveImage(num, false); }); }
+  }, 30);
+}
+async function quickSaveImage(num, clear){
+  const p = DB.pokemon.find(x=>String(x[0])===String(num));
+  if(!p) return;
+  const url = clear ? '' : document.getElementById('quickImgUrl').value.trim();
+  p[3][6] = url; // stats: [HP, Atk, Def, SpA, SpD, Spe, linkimg]
+  await saveDB();
+  closeModal();
+  renderPokeGrid();
+}
+
+async function saveNewPoke(){
+  const num = editingPokeNum!==null ? editingPokeNum : (document.getElementById('npNum').value.trim() || String(Date.now()));
+  const name = document.getElementById('npName').value.trim();
+  if(!name){ alert('Digite um nome.'); return; }
+  const t1 = document.getElementById('npType1').value;
+  const t2 = document.getElementById('npType2').value;
+  const types = t2 ? [t1,t2] : [t1];
+  const stats = ['npHP','npAtk','npDef','npSpA','npSpD','npSpe'].map(id=>parseInt(document.getElementById(id).value)||0);
+  const abilities = document.getElementById('npAbilities').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const image = document.getElementById('npImage').value.trim();
+  stats[6] = image; // stats: [HP, Atk, Def, SpA, SpD, Spe, linkimg]
+  const entry = [num,name,types,stats,abilities.length?abilities:['—']];
+  if(editingPokeNum!==null){
+    const idx = DB.pokemon.findIndex(x=>String(x[0])===String(editingPokeNum));
+    if(idx>=0) DB.pokemon[idx] = entry;
+  } else {
+    DB.pokemon.push(entry);
+  }
+  await saveDB(); closeModal(); renderPokeGrid(); refreshBuilderPokeOptions();
+}
+
+/* =============================================================
+   TIPAGEM VIEW
+============================================================= */
+function renderTypeChart(){
+  const tbl = document.getElementById('typeChart');
+  let head = '<tr><th class="row-h"></th>' + TYPES.map(t=>`<th style="color:${typeColor(t)}">${TYPE_PT[t].slice(0,4)}</th>`).join('') + '</tr>';
+  let rows = TYPES.map(atk=>{
+    let cells = TYPES.map(def=>{
+      const m = eff(atk,def);
+      const cls = m===2?'m2':m===0.5?'m05':m===0?'m0':'m1';
+      const label = m===1?'–':m===0?'0':m===2?'2×':'½×';
+      return `<td class="${cls}">${label}</td>`;
+    }).join('');
+    return `<tr><th class="row-h" style="color:${typeColor(atk)}">${TYPE_PT[atk]}</th>${cells}</tr>`;
+  }).join('');
+  tbl.innerHTML = head+rows;
+}
+
+function effLabel(m){
+  if(m===0) return '0×';
+  if(m===0.25) return '¼×';
+  if(m===0.5) return '½×';
+  if(m===1) return '1×';
+  if(m===2) return '2×';
+  if(m===4) return '4×';
+  return m+'×';
+}
+function populateCalcSelects(){
+  const optsHtml = TYPES.map(t=>`<option value="${t}">${TYPE_PT[t]}</option>`).join('');
+  document.getElementById('calcAtk').innerHTML = optsHtml;
+  document.getElementById('calcDef1').innerHTML = optsHtml;
+  document.getElementById('calcDef2').innerHTML = '<option value="">—</option>' + optsHtml;
+}
+function runCalc(){
+  const atk = document.getElementById('calcAtk').value;
+  const d1 = document.getElementById('calcDef1').value;
+  const d2 = document.getElementById('calcDef2').value || null;
+  const m = eff(atk, d1, d2);
+  const valEl = document.getElementById('calcResultValue');
+  const labEl = document.getElementById('calcResultLabel');
+  const box = document.getElementById('calcResult');
+  valEl.textContent = effLabel(m);
+  let label, color;
+  if(m===0){ label='Sem efeito (imune)'; color='var(--muted)'; }
+  else if(m<1){ label='Pouco efetivo'; color='var(--crimson)'; }
+  else if(m===1){ label='Dano normal'; color='var(--text)'; }
+  else { label='Super efetivo'; color='#7fd97a'; }
+  labEl.textContent = label;
+  valEl.style.color = color;
+  box.style.borderColor = m>1?'#7fd97a':m<1?'var(--crimson)':'var(--border)';
+}
+['calcAtk','calcDef1','calcDef2'].forEach(id=>document.getElementById(id).addEventListener('change', runCalc));
+
+/* =============================================================
+   GOLPES VIEW
+============================================================= */
+function renderMoveTable(){
+  const search = document.getElementById('moveSearch').value.toLowerCase();
+  const typeF = document.getElementById('moveTypeFilter').value;
+  const catF = document.getElementById('moveCatFilter').value;
+  let list = DB.moves.filter(m=>{
+    if(search && !m[0].toLowerCase().includes(search)) return false;
+    if(typeF && m[1]!==typeF) return false;
+    if(catF && m[2]!==catF) return false;
+    return true;
+  });
+  document.getElementById('moveCount').textContent = DB.moves.length + ' registrados';
+  const tbl = document.getElementById('moveTable');
+  if(!list.length){ tbl.innerHTML = `<tr><td class="empty-state">Nenhum golpe encontrado.</td></tr>`; return; }
+  tbl.innerHTML = `<tr><th>Nome</th><th>Tipo</th><th>Cat.</th><th>Poder</th><th>Prec.</th><th>PP</th><th>Efeito</th><th></th></tr>` +
+    list.map((m,i)=>{
+      const realIdx = DB.moves.indexOf(m);
+      return `<tr>
+      <td><b>${m[0]}</b></td>
+      <td>${typeBadge(m[1])}</td>
+      <td><span class="pill">${m[2]}</span></td>
+      <td class="pill" style="display:table-cell;">${m[3]||'—'}</td>
+      <td>${m[4]}${typeof m[4]==='number'?'%':''}</td>
+      <td>${m[5]}</td>
+      <td class="desc-cell">${m[6]}</td>
+      <td><button class="btn danger small" onclick="deleteMove(${realIdx})">✕</button></td>
+    </tr>`;}).join('');
+}
+async function deleteMove(idx){
+  if(!confirm('Remover este golpe?')) return;
+  DB.moves.splice(idx,1); await saveDB(); renderMoveTable(); refreshBuilderMoveOptions();
+}
+['moveSearch','moveTypeFilter','moveCatFilter'].forEach(id=>document.getElementById(id).addEventListener('input',renderMoveTable));
+
+document.getElementById('btnAddMove').addEventListener('click',()=>{
+  openModal(`
+    <h2>Adicionar Golpe</h2>
+    <div class="form-grid">
+      <div><label>Nome</label><input type="text" id="nmName"></div>
+      <div><label>Tipo</label><select id="nmType">${TYPES.map(t=>`<option value="${t}">${TYPE_PT[t]}</option>`).join('')}</select></div>
+      <div><label>Categoria</label><select id="nmCat"><option>Físico</option><option>Especial</option><option>Status</option></select></div>
+      <div><label>Poder</label><input type="number" id="nmPower" value="80"></div>
+      <div><label>Precisão (%)</label><input type="number" id="nmAcc" value="100"></div>
+      <div><label>PP</label><input type="number" id="nmPP" value="15"></div>
+      <div class="form-full"><label>Efeito</label><input type="text" id="nmEffect" placeholder="Descrição do efeito"></div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn" onclick="saveNewMove()">Salvar</button>
+    </div>
+  `);
+});
+async function saveNewMove(){
+  const name = document.getElementById('nmName').value.trim();
+  if(!name){ alert('Digite um nome.'); return; }
+  DB.moves.push([name, document.getElementById('nmType').value, document.getElementById('nmCat').value,
+    parseInt(document.getElementById('nmPower').value)||0, parseInt(document.getElementById('nmAcc').value)||100,
+    parseInt(document.getElementById('nmPP').value)||10, document.getElementById('nmEffect').value.trim()||'—']);
+  await saveDB(); closeModal(); renderMoveTable(); refreshBuilderMoveOptions();
+}
+
+/* =============================================================
+   HABILIDADES VIEW
+============================================================= */
+function renderAbilityTable(){
+  const search = document.getElementById('abilitySearch').value.toLowerCase();
+  let list = DB.abilities.filter(a=>a[0].toLowerCase().includes(search));
+  document.getElementById('abilityCount').textContent = DB.abilities.length + ' registradas';
+  const tbl = document.getElementById('abilityTable');
+  if(!list.length){ tbl.innerHTML = `<tr><td class="empty-state">Nenhuma habilidade encontrada.</td></tr>`; return; }
+  tbl.innerHTML = `<tr><th>Nome</th><th>Efeito</th><th></th></tr>` + list.map(a=>{
+    const idx = DB.abilities.indexOf(a);
+    return `<tr><td><b>${a[0]}</b></td><td class="desc-cell">${a[1]}</td><td><button class="btn danger small" onclick="deleteAbility(${idx})">✕</button></td></tr>`;
+  }).join('');
+}
+async function deleteAbility(idx){
+  if(!confirm('Remover esta habilidade?')) return;
+  DB.abilities.splice(idx,1); await saveDB(); renderAbilityTable();
+}
+document.getElementById('abilitySearch').addEventListener('input',renderAbilityTable);
+document.getElementById('btnAddAbility').addEventListener('click',()=>{
+  openModal(`
+    <h2>Adicionar Habilidade</h2>
+    <div class="form-grid">
+      <div class="form-full"><label>Nome</label><input type="text" id="naName"></div>
+      <div class="form-full"><label>Efeito</label><input type="text" id="naEffect"></div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn" onclick="saveNewAbility()">Salvar</button>
+    </div>
+  `);
+});
+async function saveNewAbility(){
+  const name = document.getElementById('naName').value.trim();
+  if(!name){ alert('Digite um nome.'); return; }
+  DB.abilities.push([name, document.getElementById('naEffect').value.trim()||'—']);
+  await saveDB(); closeModal(); renderAbilityTable();
+}
+
+/* =============================================================
+   ITENS VIEW
+============================================================= */
+function populateItemCatFilter(){
+  const cats = [...new Set(DB.items.map(i=>i[1]))];
+  const sel = document.getElementById('itemCatFilter');
+  sel.innerHTML = '<option value="">Todas categorias</option>' + cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+}
+let itemSelectMode = false;
+let itemSelected = new Set();
+
+function renderItemTable(){
+  const search = document.getElementById('itemSearch').value.toLowerCase();
+  const catF = document.getElementById('itemCatFilter').value;
+  let list = DB.items.filter(i=>{
+    if(search && !i[0].toLowerCase().includes(search)) return false;
+    if(catF && i[1]!==catF) return false;
+    return true;
+  });
+  document.getElementById('itemCount').textContent = DB.items.length + ' registrados';
+  const tbl = document.getElementById('itemTable');
+  if(!list.length){ tbl.innerHTML = `<tr><td class="empty-state">Nenhum item encontrado.</td></tr>`; return; }
+  tbl.innerHTML = `<tr>${itemSelectMode?'<th></th>':''}<th></th><th>Nome</th><th>Categoria</th><th>Efeito</th><th></th></tr>` + list.map(i=>{
+    const idx = DB.items.indexOf(i);
+    const img = i[3];
+    const imgHtml = img
+      ? `<img src="${img}" alt="${i[0]}" style="width:32px;height:32px;object-fit:contain;background:var(--panel2);border-radius:6px;" onerror="this.style.display='none'">`
+      : `<div style="width:32px;height:32px;background:var(--panel2);border-radius:6px;"></div>`;
+    const isSel = itemSelected.has(idx);
+    const checkCell = itemSelectMode ? `<td><input type="checkbox" class="row-check" ${isSel?'checked':''} onclick="event.stopPropagation(); toggleItemSelect(${idx})"></td>` : '';
+    const actionCell = itemSelectMode ? '' : `<td style="white-space:nowrap;"><button class="btn secondary small" onclick="openEditItem(${idx})">✎</button></td>`;
+    const rowClick = itemSelectMode ? ` onclick="toggleItemSelect(${idx})" style="cursor:pointer;"` : '';
+    return `<tr class="${isSel?'row-selected':''}"${rowClick}>${checkCell}<td>${imgHtml}</td><td><b>${i[0]}</b></td><td><span class="pill">${i[1]}</span></td><td class="desc-cell">${i[2]}</td>${actionCell}</tr>`;
+  }).join('');
+}
+function setItemSelectMode(on){
+  itemSelectMode = on;
+  itemSelected.clear();
+  document.getElementById('btnToggleItemSelect').textContent = on ? 'Cancelar seleção' : 'Remover';
+  document.getElementById('itemSelectHint').classList.toggle('active', on);
+  updateDeleteSelectedItemBtn();
+  renderItemTable();
+}
+function toggleItemSelect(idx){
+  if(itemSelected.has(idx)) itemSelected.delete(idx); else itemSelected.add(idx);
+  updateDeleteSelectedItemBtn();
+  renderItemTable();
+}
+function updateDeleteSelectedItemBtn(){
+  const btn = document.getElementById('btnDeleteSelectedItem');
+  if(itemSelectMode && itemSelected.size>0){ btn.style.display='inline-block'; btn.textContent = `Excluir (${itemSelected.size})`; }
+  else btn.style.display='none';
+}
+document.getElementById('btnToggleItemSelect').addEventListener('click',()=> setItemSelectMode(!itemSelectMode));
+document.getElementById('btnDeleteSelectedItem').addEventListener('click', async ()=>{
+  if(!itemSelected.size) return;
+  if(!confirm(`Remover ${itemSelected.size} item(ns) selecionado(s)?`)) return;
+  DB.items = DB.items.filter((it,idx)=>!itemSelected.has(idx));
+  await saveDB();
+  setItemSelectMode(false);
+  populateItemCatFilter(); renderItemTable(); refreshBuilderItemOptions();
+});
+['itemSearch','itemCatFilter'].forEach(id=>document.getElementById(id).addEventListener('input',renderItemTable));
+
+let editingItemIdx = null;
+document.getElementById('btnAddItem').addEventListener('click',()=>{ editingItemIdx=null; openItemForm(); });
+function openEditItem(idx){ editingItemIdx = idx; openItemForm(DB.items[idx]); }
+function openItemForm(existing){
+  const i = existing || ['','Geral','',''];
+  openModal(`
+    <h2>${existing?'Editar':'Adicionar'} Item</h2>
+    <div class="form-grid">
+      <div><label>Nome</label><input type="text" id="niName" value="${i[0]}"></div>
+      <div><label>Categoria</label><input type="text" id="niCat" value="${i[1]}" placeholder="ex: Poder, Defesa..."></div>
+      <div class="form-full"><label>Efeito</label><input type="text" id="niEffect" value="${i[2]}"></div>
+      <div class="form-full"><label>URL da imagem (ícone do item)</label><input type="text" id="niImage" value="${i[3]||''}" placeholder="https://exemplo.com/icone.png"></div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn" onclick="saveNewItem()">Salvar</button>
+    </div>
+  `);
+}
+async function saveNewItem(){
+  const name = document.getElementById('niName').value.trim();
+  if(!name){ alert('Digite um nome.'); return; }
+  const entry = [name, document.getElementById('niCat').value.trim()||'Geral', document.getElementById('niEffect').value.trim()||'—', document.getElementById('niImage').value.trim()];
+  if(editingItemIdx!==null) DB.items[editingItemIdx] = entry; else DB.items.push(entry);
+  await saveDB(); closeModal(); populateItemCatFilter(); renderItemTable(); refreshBuilderItemOptions();
+}
+
+/* =============================================================
+   TIMES VIEW — team list + builder
+============================================================= */
+let editingTeamId = null;
+let draftTeam = null;
+
+const TEAM_LEVEL = 50;
+function emptyMember(){ return { pokeNum:null, nickname:'', nature:'Hardy', ability:'', item:'', moves:[null,null,null,null], train:{hp:0,atk:0,def:0,spa:0,spd:0,spe:0} }; }
+function newTeamDraft(){ return { id: 'team_'+Date.now(), name:'Novo Time', members:[emptyMember(),emptyMember(),emptyMember(),emptyMember(),emptyMember(),emptyMember()] }; }
+
+function renderTeamsList(){
+  const wrap = document.getElementById('teamsList');
+  if(!DB.teams.length){
+    wrap.innerHTML = `<div class="empty-state"><div class="big">⚔</div>Nenhum time criado ainda. Clique em "Novo Time" para montar sua primeira equipe.</div>`;
+    return;
+  }
+  wrap.innerHTML = DB.teams.map(team=>{
+    const slots = team.members.map(m=>{
+      if(!m.pokeNum) return `<div class="slot empty">vazio</div>`;
+      const p = DB.pokemon.find(x=>String(x[0])===String(m.pokeNum));
+      const pname = p?p[1]:'?';
+      return `<div class="slot">
+        <div class="types">${p?p[2].map(typeBadge).join(''):''}</div>
+        <div class="name">${m.nickname||pname}</div>
+        <div class="sub">${m.nature}</div>
+      </div>`;
+    }).join('');
+    return `<div class="team-card">
+      <h3>${team.name}
+        <span>
+          <button class="btn secondary small" onclick="editTeam('${team.id}')">Editar</button>
+          <button class="btn danger small" onclick="deleteTeam('${team.id}')">Excluir</button>
+        </span>
+      </h3>
+      <div class="slot-row">${slots}</div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('btnNewTeam').addEventListener('click',()=>{
+  draftTeam = newTeamDraft(); editingTeamId = null;
+  document.getElementById('teamsList').style.display='none';
+  document.getElementById('teamBuilder').style.display='block';
+  renderBuilder();
+});
+function editTeam(id){
+  const t = DB.teams.find(x=>x.id===id);
+  draftTeam = JSON.parse(JSON.stringify(t)); editingTeamId = id;
+  document.getElementById('teamsList').style.display='none';
+  document.getElementById('teamBuilder').style.display='block';
+  renderBuilder();
+}
+async function deleteTeam(id){
+  if(!confirm('Excluir este time?')) return;
+  DB.teams = DB.teams.filter(t=>t.id!==id); await saveDB(); renderTeamsList();
+}
+
+function renderBuilder(){
+  const el = document.getElementById('teamBuilder');
+  el.innerHTML = `
+    <div class="builder">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <input type="text" id="teamNameInput" value="${draftTeam.name}" style="font-family:var(--disp);font-size:18px;font-weight:700;flex:1;min-width:180px;">
+        <button class="btn secondary" id="btnCancelBuild">Voltar</button>
+        <button class="btn" id="btnSaveTeam">Salvar Time</button>
+      </div>
+      <div class="builder-slots" id="builderSlots"></div>
+      <div class="editor" id="memberEditor"><p style="color:var(--muted);">Clique em um slot acima para configurar aquele Pokémon.</p></div>
+    </div>
+  `;
+  document.getElementById('btnCancelBuild').addEventListener('click',()=>{
+    document.getElementById('teamBuilder').style.display='none';
+    document.getElementById('teamsList').style.display='block';
+  });
+  document.getElementById('btnSaveTeam').addEventListener('click',saveTeam);
+  renderBuilderSlots();
+}
+let activeSlot = null;
+function renderBuilderSlots(){
+  const wrap = document.getElementById('builderSlots');
+  wrap.innerHTML = draftTeam.members.map((m,i)=>{
+    if(!m.pokeNum) return `<div class="bslot" onclick="selectSlot(${i})">+ Slot ${i+1}</div>`;
+    const p = DB.pokemon.find(x=>String(x[0])===String(m.pokeNum));
+    return `<div class="bslot filled" onclick="selectSlot(${i})">
+      <div class="n">${m.nickname||p[1]}</div>
+      <div>${p[2].map(t=>TYPE_PT[t]).join('/')}</div>
+      <div style="color:var(--muted)">${m.nature}</div>
+    </div>`;
+  }).join('');
+}
+function selectSlot(i){ activeSlot = i; renderMemberEditor(); }
+
+function refreshBuilderPokeOptions(){ if(activeSlot!==null) renderMemberEditor(); }
+function refreshBuilderMoveOptions(){ if(activeSlot!==null) renderMemberEditor(); }
+function refreshBuilderItemOptions(){ if(activeSlot!==null) renderMemberEditor(); }
+
+function renderMemberEditor(){
+  const m = draftTeam.members[activeSlot];
+  const p = m.pokeNum ? DB.pokemon.find(x=>String(x[0])===String(m.pokeNum)) : null;
+  const totalUsed = STAT_KEYS.reduce((s,k)=>s+(m.train[k]||0),0);
+
+  let html = `<h3 style="font-family:var(--disp);font-size:16px;margin-bottom:12px;">Configurar Slot ${activeSlot+1}</h3>
+    <div class="form-grid">
+      <div class="form-full">
+        <label>Pokémon</label>
+        <select id="mePoke">
+          <option value="">— selecione —</option>
+          ${DB.pokemon.map(pp=>`<option value="${pp[0]}" ${p&&p[0]===pp[0]?'selected':''}>${pp[1]} (${pp[2].map(t=>TYPE_PT[t]).join('/')})</option>`).join('')}
+        </select>
+      </div>`;
+  if(p){
+    html += `
+      <div><label>Apelido</label><input type="text" id="meNick" value="${m.nickname}" placeholder="${p[1]}"></div>
+      <div><label>Natureza</label><select id="meNature">${NATURES.map(n=>`<option value="${n[0]}" ${m.nature===n[0]?'selected':''}>${n[0]}${n[1]?` (+${STAT_LABEL[n[1].toLowerCase()]||n[1]} / -${STAT_LABEL[n[2].toLowerCase()]||n[2]})`:' (neutra)'}</option>`).join('')}</select></div>
+      <div><label>Habilidade</label><select id="meAbility">${p[4].map(a=>`<option value="${a}" ${m.ability===a?'selected':''}>${a}</option>`).join('')}</select></div>
+      <div class="form-full"><label>Item</label><select id="meItem"><option value="">— nenhum —</option>${DB.items.map(it=>`<option value="${it[0]}" ${m.item===it[0]?'selected':''}>${it[0]}</option>`).join('')}</select></div>
+    </div>
+    <div style="margin-top:14px;font-size:12px;color:var(--muted);font-weight:700;">GOLPES (4)</div>
+    <div class="move-select-grid">
+      ${[0,1,2,3].map(i=>`<select id="meMove${i}"><option value="">— vazio —</option>${DB.moves.map(mv=>`<option value="${mv[0]}" ${m.moves[i]===mv[0]?'selected':''}>${mv[0]} (${TYPE_PT[mv[1]]})</option>`).join('')}</select>`).join('')}
+    </div>
+    <div style="margin-top:16px;font-size:12px;color:var(--muted);font-weight:700;">TREINO DE STATUS — 66 pontos, máx. 32 por status</div>
+    ${STAT_KEYS.map(k=>{
+      const base = p[3][STAT_KEYS.indexOf(k)];
+      const final = calcFinalStat(base, m.train[k], TEAM_LEVEL, 1, k==='hp');
+      return `<div class="stat-alloc">
+        <span>${STAT_LABEL[k]}</span>
+        <input type="range" min="0" max="32" value="${m.train[k]||0}" id="tr_${k}" oninput="updateTrain('${k}', this.value)">
+        <span id="trv_${k}">${m.train[k]||0}</span>
+        <span class="pill" id="fin_${k}">${final}</span>
+      </div>`;
+    }).join('')}
+    <div class="alloc-total" id="allocTotal">Total usado: ${totalUsed} / 66</div>
+    <div style="margin-top:16px;display:flex;gap:8px;">
+      <button class="btn secondary small" onclick="clearSlot(${activeSlot})">Esvaziar slot</button>
+    </div>
+    `;
+  } else {
+    html += `</div><p style="color:var(--muted);margin-top:10px;">Selecione um Pokémon para configurar natureza, habilidade, item, golpes e treino de status.</p>`;
+  }
+  document.getElementById('memberEditor').innerHTML = html;
+
+  document.getElementById('mePoke').addEventListener('change', e=>{
+    m.pokeNum = e.target.value || null;
+    if(m.pokeNum){ const np = DB.pokemon.find(x=>String(x[0])===String(m.pokeNum)); m.ability = np[4][0]; }
+    renderBuilderSlots(); renderMemberEditor();
+  });
+  if(p){
+    document.getElementById('meNick').addEventListener('input', e=>{ m.nickname=e.target.value; renderBuilderSlots(); });
+    document.getElementById('meNature').addEventListener('change', e=>{ m.nature=e.target.value; renderMemberEditor(); });
+    document.getElementById('meAbility').addEventListener('change', e=>{ m.ability=e.target.value; });
+    document.getElementById('meItem').addEventListener('change', e=>{ m.item=e.target.value; });
+    [0,1,2,3].forEach(i=>document.getElementById('meMove'+i).addEventListener('change', e=>{ m.moves[i]=e.target.value||null; }));
+  }
+}
+function updateTrain(key, val){
+  const m = draftTeam.members[activeSlot];
+  val = parseInt(val);
+  const others = STAT_KEYS.filter(k=>k!==key).reduce((s,k)=>s+(m.train[k]||0),0);
+  if(others+val > 66) val = Math.max(0, 66-others);
+  m.train[key] = val;
+  document.getElementById('tr_'+key).value = val;
+  document.getElementById('trv_'+key).textContent = val;
+  const p = DB.pokemon.find(x=>String(x[0])===String(m.pokeNum));
+  const base = p[3][STAT_KEYS.indexOf(key)];
+  document.getElementById('fin_'+key).textContent = calcFinalStat(base, val, TEAM_LEVEL, 1, key==='hp');
+  document.getElementById('allocTotal').textContent = 'Total usado: ' + (STAT_KEYS.reduce((s,k)=>s+(m.train[k]||0),0)) + ' / 66';
+}
+function clearSlot(i){ draftTeam.members[i] = emptyMember(); renderBuilderSlots(); document.getElementById('memberEditor').innerHTML = '<p style="color:var(--muted);">Slot esvaziado.</p>'; }
+
+async function saveTeam(){
+  draftTeam.name = document.getElementById('teamNameInput').value.trim() || 'Time sem nome';
+  const idx = DB.teams.findIndex(t=>t.id===draftTeam.id);
+  if(idx>=0) DB.teams[idx]=draftTeam; else DB.teams.push(draftTeam);
+  await saveDB();
+  document.getElementById('teamBuilder').style.display='none';
+  document.getElementById('teamsList').style.display='block';
+  renderTeamsList();
+}
+
+/* =============================================================
+   INIT
+============================================================= */
+function initBrandName(){
+  const el = document.getElementById('brandName');
+  el.textContent = DB.siteName || 'CHAMPION DEX';
+  document.title = (DB.siteName || 'CHAMPION DEX') + ' — Pokémon Champions';
+  el.addEventListener('blur', async ()=>{
+    const val = el.textContent.trim() || 'CHAMPION DEX';
+    el.textContent = val;
+    DB.siteName = val;
+    document.title = val + ' — Pokémon Champions';
+    await saveDB();
+  });
+  el.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); el.blur(); } });
+}
+async function init(){
+  await loadDB();
+  initBrandName();
+  renderPokeGrid();
+  renderTypeChart();
+  populateCalcSelects();
+  runCalc();
+  renderMoveTable();
+  renderAbilityTable();
+  populateItemCatFilter();
+  renderItemTable();
+  renderTeamsList();
+}
+init();
+</script>
+</body>
+</html>
