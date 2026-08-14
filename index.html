@@ -726,8 +726,17 @@ const POKE_SEED = [
    DATA — GOLPES (seed curado)
    [nome, tipo, categoria, poder, precisão, pp, efeito]
 ============================================================= */
-  
-const MOVE_SEED = [
+ const MOVE_SEED = [
+["Body Press", "Lutador", "Físico", 80, 100, 10, "O cálculo de dano é realizado com a Defesa do usuário, em vez do Ataque."],
+["Iron Defense", "Aço", "Estatuto", 0, 0, 15, "Aumenta drasticamente sua Defesa."],
+["Ice Punch", "Gelo", "Físico", 75, 100, 15, "Pode deixar o alvo congelado."],
+["Psychic Noise", "Psíquico", "Especial", 75, 100, 10, "Impede o alvo de recuperar HP por dois turnos."],
+["Heal Pulse", "Psíquico", "Estatuto", 0, 0, 10, "Restaura metade do HP máximo do alvo."],
+["Double-Edge", "Normal", "Físico", 120, 100, 15, "Causa dano de recuo ao usuário."],
+["Stomping Tantrum", "Terrestre", "Físico", 75, 100, 10, "O poder é duplicado se o movimento anterior do usuário falhou."],
+["Smart Strike", "Aço", "Físico", 70, 0, 10, "Este ataque nunca erra."],
+["Shadow Claw", "Fantasma", "Físico", 70, 100, 15, "Possui uma alta taxa de acerto crítico."],
+["Curse", "Fantasma", "Estatuto", 0, 0, 10, "Se usado por um Pokémon Fantasma, sacrifica metade do HP para amaldiçoar o alvo. Caso contrário, aumenta o Ataque e a Defesa, mas reduz a Velocidade."],
 ["Tackle","Normal","Físico",40,100,35,"Investida corporal simples."],
 ["Quick Attack","Normal","Físico",40,100,30,"Ataque de prioridade, sempre vai primeiro."],
 ["Hyper Beam","Normal","Especial",150,90,5,"Dano altíssimo, usuário recarrega no turno seguinte."],
@@ -742,7 +751,7 @@ const MOVE_SEED = [
 ["Fire Blast","Fire","Especial",110,85,5,"Alta chance de queimadura."],
 ["Flare Blitz","Fire","Físico",120,100,15,"Causa dano de recuo, pode queimar."],
 ["Sunny Day","Fire","Status",0,100,5,"Intensifica o sol por 5 turnos."],
-["Hydro Pump","Water","Especial",110,80,5,"Jato de água muito forte."],
+["Hydro Pump","Water","Especial",110,80,5,"-"],
 ["Surf","Water","Especial",90,100,15,"Atinge todos os alvos adjacentes em duplas."],
 ["Scald","Water","Especial",80,100,15,"Pode causar queimadura no alvo."],
 ["Ice Beam","Ice","Especial",90,100,10,"Pode congelar o alvo."],
