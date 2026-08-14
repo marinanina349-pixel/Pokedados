@@ -137,6 +137,30 @@ input[type=text]:focus,select:focus,input[type=number]:focus{border-color:var(--
 .mega-stone:hover{filter:brightness(1.2);}
 .mega-back{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:12px;cursor:pointer;margin-bottom:6px;background:none;border:none;font-family:var(--body);}
 .mega-back:hover{color:var(--gold);}
+
+/* Formas regionais */
+.regional-row{display:flex;gap:6px;margin-top:2px;margin-bottom:8px;flex-wrap:wrap;}
+.regional-badge{
+  width:26px;height:26px;border-radius:8px;
+  background:linear-gradient(135deg,#2f9e8f,#1c6b7a);
+  border:1px solid rgba(255,255,255,.35);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 0 8px rgba(47,158,143,.5);position:relative;
+}
+.regional-badge span{font-size:10px;font-weight:900;color:#fff;font-family:var(--disp);}
+.regional-badge:hover{filter:brightness(1.2);}
+.regional-back{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:12px;cursor:pointer;margin-bottom:6px;background:none;border:none;font-family:var(--body);}
+.regional-back:hover{color:#2f9e8f;}
+
+/* Variante de gênero */
+.gender-badge{
+  position:absolute;top:10px;right:10px;z-index:2;
+  background:var(--panel2);border:1px solid var(--border);border-radius:20px;
+  padding:2px 8px;font-size:11px;font-weight:800;color:var(--gold);
+  box-shadow:0 0 6px rgba(224,176,78,.35);
+}
+.gender-toggle{display:flex;gap:8px;margin:10px 0 14px;}
+.gender-toggle .btn.active{background:var(--gold);color:#16130a;}
 .pcard.selectable{cursor:pointer;}
 .pcard.selected{border-color:var(--crimson);box-shadow:0 0 0 2px var(--crimson) inset;}
 .select-check{
@@ -428,6 +452,7 @@ function eff(atk,def1,def2){
    DATA — POKÉMON (seed curado, com status base reais)
    stats: [HP, Atk, Def, SpA, SpD, Spe]
 ============================================================= */
+
 const POKE_SEED = [
 ["003", "Venusaur", ["Grass", "Poison"], [155, 102, 103, 120, 120, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/003.png"], ["Overgrow", "Chlorophyll"]],
 ["003M", "Mega Venusaur", ["Grass", "Poison"], [155, 120, 143, 142, 140, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/003_f2.png"], ["Thick Fat"]],
@@ -436,23 +461,25 @@ const POKE_SEED = [
 ["006MY", "Mega Charizard Y", ["Fire", "Flying"], [153, 124, 98, 179, 135, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/006_f3.png"], ["Drought"]],
 ["009", "Blastoise", ["Water"], [154, 103, 120, 105, 125, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/009.png"], ["Torrent", "Rain Dish"]],
 ["009M", "Mega Blastoise", ["Water"], [154, 123, 140, 155, 135, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/009_f2.png"], ["Mega Launcher"]],
-["015", "Beedrill", ["Bug", "Poison"], [140, 110, 60, 65, 100, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/015.png"], ["Swarm", "Sniper"]],
 ["015M", "Mega Beedrill", ["Bug", "Poison"], [140, 170, 60, 35, 100, 165, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/015_f2.png"], ["Adaptability"]],
 ["018", "Pidgeot", ["Normal", "Flying"], [158, 100, 95, 90, 90, 121, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/018.png"], ["Keen Eye", "Tangled Feet"]],
 ["018M", "Mega Pidgeot", ["Normal", "Flying"], [158, 100, 100, 155, 100, 141, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/018_f2.png"], ["No Guard"]],
-["024", "Arbok", ["Poison"], [140, 115, 89, 85, 99, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/024.png"], ["Intimidate", "Shed Skin"]],
+["024", "Arbok", ["Poison"], [135, 115, 89, 85, 99, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/024.png"], ["Intimidate", "Shed Skin"]],
 ["025", "Pikachu", ["Electric"], [110, 75, 60, 70, 70, 110, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/025.png"], ["Static", "Lightning Rod"]],
 ["026", "Raichu", ["Electric"], [135, 110, 75, 110, 100, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/026.png"], ["Static", "Lightning Rod"]],
 ["026MX", "Mega Raichu X", ["Electric"], [135, 170, 95, 110, 100, 170, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/026_f3.png"], ["Electric Surge"]],
 ["026MY", "Mega Raichu Y", ["Electric"], [135, 90, 85, 190, 110, 170, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/026_f4.png"], ["No Guard"]],
 ["035", "Clefairy", ["Fairy"], [145, 65, 68, 80, 85, 55, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/035.png"], ["Cute Charm", "Magic Guard"]],
+["035M", "Mega Clefable", ["Fairy"], [170, 100, 113, 155, 130, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/035_f2.png"], ["Magic Guard"]],
 ["038", "Ninetales", ["Fire"], [148, 96, 95, 101, 120, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/038.png"], ["Flash Fire", "Drought"]],
+["038-A", "Ninetales Alola", ["Ice", "Fairy"], [148, 87, 95, 101, 120, 129, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/038_f2.png"], ["Snow Cloak", "Snow Warning"]],
 ["045", "Vileplume", ["Grass", "Poison"], [150, 100, 105, 130, 110, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/045.png"], ["Chlorophyll", "Effect Spore"]],
 ["059", "Arcanine", ["Fire"], [165, 130, 100, 120, 100, 115, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/059.png"], ["Intimidate", "Flash Fire"]],
 ["065", "Alakazam", ["Psychic"], [130, 70, 65, 155, 115, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/065.png"], ["Synchronize", "Inner Focus"]],
 ["065M", "Mega Alakazam", ["Psychic"], [130, 70, 85, 195, 125, 170, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/065_f2.png"], ["Trace"]],
 ["068", "Machamp", ["Fighting"], [165, 150, 100, 85, 105, 75, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/068.png"], ["Guts", "No Guard"]],
 ["071", "Victreebel", ["Grass", "Poison"], [155, 125, 85, 120, 90, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/071.png"], ["Chlorophyll", "Gluttony"]],
+["071M", "Mega Victreebel", ["Grass", "Poison"], [155, 145, 105, 155, 115, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/071_f2.png"], ["Strong Jaw"]],
 ["080", "Slowbro", ["Water", "Psychic"], [170, 95, 130, 120, 100, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/080.png"], ["Oblivious", "Own Tempo"]],
 ["080M", "Mega Slowbro", ["Water", "Psychic"], [170, 95, 200, 150, 100, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/080_f2.png"], ["Shell Armor"]],
 ["094", "Gengar", ["Ghost", "Poison"], [135, 85, 80, 150, 95, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/094.png"], ["Cursed Body"]],
@@ -460,10 +487,11 @@ const POKE_SEED = [
 ["115", "Kangaskhan", ["Normal"], [180, 115, 100, 60, 100, 110, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/115.png"], ["Early Bird", "Scrappy"]],
 ["115M", "Mega Kangaskhan", ["Normal"], [180, 145, 120, 80, 120, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/115_f2.png"], ["Parental Bond"]],
 ["121", "Starmie", ["Water", "Psychic"], [135, 95, 105, 120, 105, 135, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/121.png"], ["Illuminate", "Natural Cure"]],
-["121M", "Mega Starmie", ["Water", "Psychic"], [135, 115, 125, 170, 125, 155, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/121_f2.png"], ["Analytic"]],
+["121M", "Mega Starmie", ["Water", "Psychic"], [135, 120, 125, 150, 125, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/121_f2.png"], ["Analytic"]],
 ["127", "Pinsir", ["Bug"], [140, 145, 120, 75, 90, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/127.png"], ["Hyper Cutter", "Mold Breaker"]],
 ["127M", "Mega Pinsir", ["Bug", "Flying"], [140, 175, 140, 85, 110, 125, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/127_f2.png"], ["Aerilate"]],
 ["128", "Tauros", ["Normal"], [150, 120, 115, 60, 90, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128.png"], ["Intimidate", "Anger Point"]],
+["128-P", "Tauros Paldea", ["Fighting"], [75, 110, 105, 30, 70, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128_f3.png"], ["Intimidate", "Anger Point", "Cud Chew"]],
 ["130", "Gyarados", ["Water", "Flying"], [170, 145, 99, 80, 120, 101, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/130.png"], ["Intimidate", "Moxie"]],
 ["130M", "Mega Gyarados", ["Water", "Dark"], [170, 175, 129, 90, 150, 101, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/130_f2.png"], ["Mold Breaker"]],
 ["132", "Ditto", ["Normal"], [123, 68, 68, 68, 68, 68, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/132.png"], ["Limber", "Imposter"]],
@@ -474,12 +502,14 @@ const POKE_SEED = [
 ["142M", "Mega Aerodactyl", ["Rock", "Flying"], [155, 155, 105, 90, 115, 170, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/142_f2.png"], ["Tough Claws"]],
 ["143", "Snorlax", ["Normal"], [235, 130, 85, 85, 130, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/143.png"], ["Immunity", "Thick Fat"]],
 ["149", "Dragonite", ["Dragon", "Flying"], [166, 154, 115, 120, 120, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/149.png"], ["Inner Focus", "Multiscale"]],
+["149M", "Mega Dragonite", ["Dragon", "Flying"], [166, 144, 135, 165, 145, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/149_f2.png"], ["Multiscale"]],
 ["154", "Meganium", ["Grass"], [155, 102, 120, 103, 120, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/154.png"], ["Overgrow", "Leaf Guard"]],
-["154M", "Mega Meganium", ["Grass"], [155, 132, 150, 123, 150, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/154_f2.png"], ["Thick Fat"]],
+["154M", "Mega Meganium", ["Grass"], [155, 112, 135, 163, 135, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/154_f2.png"], ["Thick Fat"]],
 ["157", "Typhlosion", ["Fire"], [153, 104, 98, 129, 105, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/157.png"], ["Blaze", "Flash Fire"]],
+["157-H", "Typhlosion Hisui", ["Fire", "Ghost"], [148, 104, 98, 139, 105, 115, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/157_f2.png"], ["Blaze", "Frisk"]],
 ["160", "Feraligatr", ["Water"], [160, 125, 120, 99, 103, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/160.png"], ["Torrent", "Sheer Force"]],
-["160M", "Mega Feraligatr", ["Water"], [160, 155, 145, 119, 123, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/160_f2.png"], ["Sheer Force"]],
-["168", "Ariados", ["Bug", "Poison"], [145, 110, 60, 80, 90, 60, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/168.png"], ["Swarm", "Insomnia"]],
+["160M", "Mega Feraligatr", ["Water"], [160, 180, 145, 109, 113, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/160_f2.png"], ["Sheer Force"]],
+["168", "Ariados", ["Bug", "Poison"], [145, 110, 90, 80, 90, 60, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/168.png"], ["Swarm", "Insomnia"]],
 ["181", "Ampharos", ["Electric"], [165, 95, 105, 135, 110, 75, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/181.png"], ["Static", "Plus"]],
 ["181M", "Mega Ampharos", ["Electric", "Dragon"], [165, 115, 125, 185, 130, 65, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/181_f2.png"], ["Mold Breaker"]],
 ["184", "Azumarill", ["Water", "Fairy"], [175, 70, 100, 80, 100, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/184.png"], ["Thick Fat", "Huge Power"]],
@@ -489,12 +519,15 @@ const POKE_SEED = [
 ["199", "Slowking", ["Water", "Psychic"], [170, 95, 100, 120, 130, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/199.png"], ["Oblivious", "Regenerator"]],
 ["205", "Forretress", ["Bug", "Steel"], [150, 110, 160, 80, 80, 60, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/205.png"], ["Sturdy", "Overcoat"]],
 ["208", "Steelix", ["Steel", "Ground"], [150, 105, 220, 75, 85, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/208.png"], ["Rock Head", "Sturdy"]],
+["208M", "Mega Steelix", ["Steel", "Ground"], [150, 145, 250, 75, 115, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/208_f2.png"], ["Sand Force"]],
 ["211", "Qwilfish", ["Water", "Poison"], [140, 115, 105, 75, 75, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/211.png"], ["Poison Point", "Intimidate"]],
+["211-H", "Qwilfish Hisui", ["Dark", "Poison"], [65, 95, 85, 55, 55, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/211_f2.png"], ["Poison Point", "Swift Swim", "Intimidate"]],
 ["212", "Scizor", ["Bug", "Steel"], [145, 150, 120, 75, 100, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/212.png"], ["Swarm", "Technician"]],
 ["212M", "Mega Scizor", ["Bug", "Steel"], [145, 170, 160, 85, 120, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/212_f2.png"], ["Technician"]],
 ["214", "Heracross", ["Bug", "Fighting"], [155, 145, 95, 60, 115, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/214.png"], ["Swarm", "Guts"]],
 ["214M", "Mega Heracross", ["Bug", "Fighting"], [155, 205, 135, 60, 125, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/214_f2.png"], ["Skill Link"]],
 ["227", "Skarmory", ["Steel", "Flying"], [140, 100, 160, 60, 90, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/227.png"], ["Keen Eye", "Sturdy"]],
+["227M", "Mega Skarmory", ["Steel", "Flying"], [140, 160, 130, 60, 120, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/227_f2.png"], ["Filter"]],
 ["229", "Houndoom", ["Dark", "Fire"], [150, 110, 70, 130, 100, 115, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/229.png"], ["Early Bird", "Flash Fire"]],
 ["229M", "Mega Houndoom", ["Dark", "Fire"], [150, 110, 110, 160, 110, 135, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/229_f2.png"], ["Solar Power"]],
 ["248", "Tyranitar", ["Rock", "Dark"], [175, 154, 130, 115, 120, 81, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/248.png"], ["Sand Stream", "Unnerve"]],
@@ -530,6 +563,7 @@ const POKE_SEED = [
 ["354", "Banette", ["Ghost"], [139, 135, 85, 103, 83, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/354.png"], ["Insomnia", "Frisk"]],
 ["354M", "Mega Banette", ["Ghost"], [139, 185, 95, 113, 103, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/354_f2.png"], ["Prankster"]],
 ["358", "Chimecho", ["Psychic"], [150, 70, 100, 115, 110, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/358.png"], ["Levitate"]],
+["358M", "Mega Chimecho", ["Psychic", "Steel"], [150, 70, 130, 155, 140, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/358_f2.png"], ["Levitate"]],
 ["359", "Absol", ["Dark"], [140, 150, 80, 95, 80, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/359.png"], ["Pressure", "Super Luck"]],
 ["359M", "Mega Absol", ["Dark"], [140, 170, 80, 135, 80, 135, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/359_f2.png"], ["Magic Bounce"]],
 ["362", "Glalie", ["Ice"], [155, 100, 100, 100, 100, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/362.png"], ["Inner Focus", "Ice Body"]],
@@ -566,9 +600,16 @@ const POKE_SEED = [
 ["478", "Froslass", ["Ice", "Ghost"], [145, 100, 90, 100, 90, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/478.png"], ["Snow Cloak", "Cursed Body"]],
 ["478M", "Mega Froslass", ["Ice", "Ghost"], [145, 100, 90, 160, 120, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/478_f2.png"], ["Snow Warning"]],
 ["479", "Rotom", ["Electric", "Ghost"], [125, 70, 97, 115, 97, 111, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479.png"], ["Levitate"]],
+["479H", "Heat Rotom", ["Electric", "Fire"], [50, 65, 107, 105, 107, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f2.png"], ["Levitate"]],
+["479W", "Wash Rotom", ["Electric", "Water"], [50, 65, 107, 105, 107, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f3.png"], ["Levitate"]],
+["479F", "Frost Rotom", ["Electric", "Ice"], [50, 65, 107, 105, 107, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f4.png"], ["Levitate"]],
+["479S", "Fan Rotom", ["Electric", "Flying"], [50, 65, 107, 105, 107, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f5.png"], ["Levitate"]],
+["479M", "Mow Rotom", ["Electric", "Grass"], [50, 65, 107, 105, 107, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f6.png"], ["Levitate"]],
 ["497", "Serperior", ["Grass"], [150, 95, 115, 95, 115, 133, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/497.png"], ["Overgrow", "Contrary"]],
 ["500", "Emboar", ["Fire", "Fighting"], [185, 143, 85, 120, 85, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/500.png"], ["Blaze", "Reckless"]],
+["500M", "Mega Emboar", ["Fire", "Fighting"], [185, 168, 95, 130, 130, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/500_f2.png"], ["Reckless"]],
 ["503", "Samurott", ["Water"], [170, 120, 105, 128, 90, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/503.png"], ["Torrent", "Shell Armor"]],
+["503-H", "Samurott Hisui", ["Water", "Dark"], [165, 128, 100, 120, 85, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/503_f2.png"], ["Torrent", "Sharpness"]],
 ["505", "Watchog", ["Normal"], [135, 105, 89, 80, 89, 97, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/505.png"], ["Illuminate", "Keen Eye"]],
 ["510", "Liepard", ["Dark"], [139, 108, 70, 108, 70, 126, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/510.png"], ["Limber", "Prankster"]],
 ["512", "Simisage", ["Grass"], [150, 118, 83, 118, 83, 121, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/512.png"], ["Gluttony", "Overgrow"]],
@@ -580,6 +621,7 @@ const POKE_SEED = [
 ["531M", "Mega Audino", ["Normal", "Fairy"], [178, 80, 146, 100, 146, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/531_f2.png"], ["Healer"]],
 ["534", "Conkeldurr", ["Fighting"], [180, 160, 115, 75, 85, 65, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/534.png"], ["Guts", "Sheer Force"]],
 ["545", "Scolipede", ["Bug", "Poison"], [135, 120, 109, 75, 89, 132, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/545.png"], ["Swarm", "Speed Boost"]],
+["545M", "Mega Scolipede", ["Bug", "Poison"], [60, 120, 109, 65, 95, 132, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/545_f2.png"], ["Speed Boost"]],
 ["547", "Whimsicott", ["Grass", "Fairy"], [135, 87, 105, 97, 95, 136, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/547.png"], ["Prankster", "Infiltrator"]],
 ["553", "Krookodile", ["Ground", "Dark"], [170, 137, 100, 85, 90, 112, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/553.png"], ["Intimidate", "Moxie"]],
 ["560", "Scrafty", ["Dark", "Fighting"], [140, 110, 135, 65, 135, 78, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/560.png"], ["Intimidate", "Shed Skin", "Moxie"]],
@@ -587,37 +629,43 @@ const POKE_SEED = [
 ["563", "Cofagrigus", ["Ghost"], [133, 70, 165, 115, 125, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/563.png"], ["Mummy"]],
 ["569", "Garbodor", ["Poison"], [155, 115, 102, 80, 102, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/569.png"], ["Stench", "Weak Armor"]],
 ["571", "Zoroark", ["Dark"], [135, 125, 80, 140, 80, 125, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/571.png"], ["Illusion"]],
+["571-H", "Zoroark Hisui", ["Normal", "Ghost"], [130, 120, 80, 145, 80, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/571_f2.png"], ["Illusion"]],
 ["579", "Reuniclus", ["Psychic"], [185, 85, 95, 145, 105, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/579.png"], ["Overcoat", "Magic Guard"]],
 ["584", "Vanilluxe", ["Ice"], [146, 115, 105, 130, 115, 99, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/584.png"], ["Ice Body", "Snow Warning"]],
 ["587", "Emolga", ["Electric", "Flying"], [130, 95, 80, 95, 80, 123, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/587.png"], ["Motor Drive", "Static"]],
 ["604", "Eelektross", ["Electric"], [160, 135, 100, 125, 100, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/604.png"], ["Levitate"]],
 ["604M", "Mega Eelektross", ["Electric"], [160, 175, 120, 155, 120, 60, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/604_f2.png"], ["Levitate"]],
 ["609", "Chandelure", ["Ghost", "Fire"], [135, 75, 110, 165, 110, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/609.png"], ["Flash Fire", "Flame Body"]],
+["609M", "Mega Chandelure", ["Ghost", "Fire"], [135, 95, 130, 195, 130, 110, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/609_f2.png"], ["Shadow Tag"]],
 ["614", "Beartic", ["Ice"], [170, 150, 100, 90, 100, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/614.png"], ["Snow Cloak", "Slush Rush"]],
 ["618", "Stunfisk", ["Ground", "Electric"], [184, 86, 104, 101, 119, 52, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/618.png"], ["Static", "Limber"]],
-["623", "Golurk", ["Ghost", "Ground"], [239, 164, 120, 95, 122, 94, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/623.png"], ["Iron Fist", "Klutz"]],
-["623M", "Mega Golurk", ["Ghost", "Ground"], [239, 207, 150, 115, 152, 74, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/623_f2.png"], ["No Guard"]],
+["623", "Golurk", ["Ghost", "Ground"], [164, 144, 100, 75, 100, 75, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/623.png"], ["Iron Fist", "Klutz"]],
+["623M", "Mega Golurk", ["Ghost", "Ground"], [164, 179, 125, 90, 125, 75, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/623_f2.png"], ["No Guard"]],
 ["635", "Hydreigon", ["Dark", "Dragon"], [167, 125, 110, 145, 110, 118, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/635.png"], ["Levitate"]],
 ["637", "Volcarona", ["Bug", "Fire"], [160, 80, 85, 155, 125, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/637.png"], ["Flame Body", "Swarm"]],
 ["652", "Chesnaught", ["Grass", "Fighting"], [163, 127, 142, 94, 95, 84, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/652.png"], ["Overgrow", "Bulletproof"]],
-["652M", "Mega Chesnaught", ["Grass", "Fighting"], [163, 157, 172, 94, 115, 104, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/652_f2.png"], ["Bulletproof"]],
+["652M", "Mega Chesnaught", ["Grass", "Fighting"], [163, 157, 192, 94, 135, 64, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/652_f2.png"], ["Bulletproof"]],
 ["655", "Delphox", ["Fire", "Psychic"], [150, 89, 92, 134, 120, 124, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/655.png"], ["Blaze", "Magician"]],
-["655M", "Mega Delphox", ["Fire", "Psychic"], [150, 89, 102, 184, 140, 144, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/655_f2.png"], ["Magician"]],
+["655M", "Mega Delphox", ["Fire", "Psychic"], [150, 89, 92, 179, 145, 154, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/655_f2.png"], ["Magician"]],
 ["658", "Greninja", ["Water", "Dark"], [147, 115, 87, 123, 91, 142, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/658.png"], ["Torrent", "Protean"]],
-["658M", "Mega Greninja", ["Water", "Dark"], [147, 150, 107, 173, 111, 117, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/658_f3.png"], ["Protean"]],
+["658M", "Mega Greninja", ["Water", "Dark"], [147, 145, 97, 153, 101, 162, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/658_f3.png"], ["Protean"]],
 ["660", "Diggersby", ["Normal", "Ground"], [160, 76, 97, 70, 97, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/660.png"], ["Pickup", "Huge Power"]],
 ["666", "Vivillon", ["Bug", "Flying"], [155, 72, 70, 110, 70, 109, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/666.png"], ["Shield Dust", "Compound Eyes"]],
 ["668", "Pyroar", ["Fire", "Normal"], [161, 88, 92, 129, 86, 126, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/668.png"], ["Rivalry", "Unnerve"]],
 ["668M", "Mega Pyroar", ["Fire", "Normal"], [161, 88, 112, 179, 116, 126, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/668_f3.png"], ["Moxie"]],
-["670", "Floette", ["Fairy"], [129, 65, 67, 95, 118, 93, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/670.png"], ["Flower Veil", "Symbiosis"]],
-["670M", "Mega Floette", ["Fairy"], [129, 65, 107, 135, 138, 93, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/670_f2.png"], ["Flower Veil"]],
+["670", "Floette", ["Fairy"], [129, 65, 67, 95, 118, 72, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/670.png"], ["Flower Veil", "Symbiosis"]],
+["670M", "Mega Floette", ["Fairy"], [149, 105, 107, 175, 168, 122, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/670_f2.png"], ["Flower Veil"]],
 ["671", "Florges", ["Fairy"], [153, 85, 88, 132, 174, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/671.png"], ["Flower Veil", "Symbiosis"]],
 ["675", "Pangoro", ["Fighting", "Dark"], [170, 144, 98, 89, 91, 78, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/675.png"], ["Iron Fist", "Mold Breaker"]],
 ["676", "Furfrou", ["Normal"], [150, 100, 80, 85, 110, 122, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/676.png"], ["Fur Coat"]],
-["678", "Meowstic", ["Psychic"], [149, 68, 96, 103, 101, 124, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/678.png"], ["Keen Eye", "Infiltrator"]],
+["678", "Meowstic", ["Psychic"], [149, 68, 96, 103, 101, 124, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/678.png"], ["Keen Eye", "Infiltrator"], {gender:{
+  baseLabel:"Macho", altLabel:"Fêmea",
+  altStats:[149, 68, 86, 113, 101, 124],
+  altAbilities:["Keen Eye","Competitive"]
+}}],
 ["681", "Aegislash", ["Steel", "Ghost"], [135, 170, 170, 170, 170, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/681.png"], ["Stance Change"]],
 ["683", "Aromatisse", ["Fairy"], [176, 92, 92, 119, 109, 49, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/683.png"], ["Healer", "Aroma Veil"]],
-["685", "Slurpuff", ["Fairy"], [157, 106, 106, 105, 95, 92, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/685.png"], ["Sweet Veil", "Unburden"]],
+["685", "Slurpuff", ["Fairy"], [157, 100, 106, 105, 95, 92, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/685.png"], ["Sweet Veil", "Unburden"]],
 ["687", "Malamar", ["Dark", "Psychic"], [161, 112, 108, 88, 95, 93, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/687.png"], ["Contrary", "Suction Cups"]],
 ["687M", "Mega Malamar", ["Dark", "Psychic"], [161, 162, 118, 118, 105, 93, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/687_f2.png"], ["Contrary"]],
 ["689", "Barbaracle", ["Rock", "Water"], [147, 125, 135, 74, 106, 88, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/689.png"], ["Sniper", "Tough Claws"]],
@@ -629,15 +677,17 @@ const POKE_SEED = [
 ["699", "Aurorus", ["Rock", "Ice"], [198, 97, 92, 119, 112, 78, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/699.png"], ["Refrigerate", "Snow Warning"]],
 ["700", "Sylveon", ["Fairy"], [170, 85, 85, 130, 150, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/700.png"], ["Cute Charm", "Pixilate"]],
 ["701", "Hawlucha", ["Fighting", "Flying"], [153, 112, 95, 94, 83, 138, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/701.png"], ["Limber", "Unburden"]],
-["701M", "Mega Hawlucha", ["Fighting", "Flying"], [153, 142, 105, 94, 83, 188, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/701_f2.png"], ["No Guard"]],
+["701M", "Mega Hawlucha", ["Fighting", "Flying"], [153, 157, 120, 94, 113, 138, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/701_f2.png"], ["No Guard"]],
 ["702", "Dedenne", ["Electric", "Fairy"], [142, 78, 77, 101, 87, 121, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/702.png"], ["Cheek Pouch", "Plus"]],
 ["706", "Goodra", ["Dragon"], [165, 120, 90, 130, 170, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/706.png"], ["Sap Sipper", "Hydration"]],
 ["707", "Klefki", ["Steel", "Fairy"], [132, 100, 111, 100, 107, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/707.png"], ["Prankster", "Magician"]],
-["709", "Trevenant", ["Ghost", "Grass"], [160, 130, 96, 85, 102, 58, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/709.png"], ["Natural Cure", "Frisk"]],
+["709", "Trevenant", ["Ghost", "Grass"], [160, 130, 96, 85, 102, 76, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/709.png"], ["Natural Cure", "Frisk"]],
 ["711", "Gourgeist", ["Ghost", "Grass"], [140, 110, 142, 78, 95, 104, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/711.png"], ["Pickup", "Frisk"]],
 ["713", "Avalugg", ["Ice"], [170, 137, 204, 64, 66, 48, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/713.png"], ["Own Tempo", "Ice Body"]],
+["713-H", "Avalugg Hisui", ["Ice", "Rock"], [170, 147, 204, 54, 56, 58, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/713_f2.png"], ["Strong Jaw", "Ice Body", "Sturdy"]],
 ["715", "Noivern", ["Flying", "Dragon"], [160, 90, 100, 117, 100, 143, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/715.png"], ["Frisk", "Infiltrator"]],
 ["724", "Decidueye", ["Grass", "Ghost"], [153, 127, 95, 120, 120, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/724.png"], ["Overgrow", "Long Reach"]],
+["724-H", "Decidueye Hisui", ["Grass", "Fighting"], [163, 132, 100, 115, 115, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/724_f2.png"], ["Overgrow", "Scrappy"]],
 ["727", "Incineroar", ["Fire", "Dark"], [170, 135, 110, 100, 110, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/727.png"], ["Blaze", "Intimidate"]],
 ["730", "Primarina", ["Water", "Fairy"], [155, 94, 94, 146, 136, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/730.png"], ["Torrent", "Liquid Voice"]],
 ["745", "Lycanroc", ["Rock"], [150, 135, 85, 75, 85, 132, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/745.png"], ["Sand Rush", "Steadfast"]],
@@ -649,8 +699,12 @@ const POKE_SEED = [
 ["858", "Hatterene", ["Psychic", "Fairy"], [132, 110, 115, 156, 123, 49, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/858.png"], ["Healer", "Magic Bounce"]],
 ["861", "Grimmsnarl", ["Dark", "Fairy"], [170, 140, 85, 115, 95, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/861.png"], ["Prankster", "Frisk"]],
 ["887", "Dragapult", ["Dragon", "Ghost"], [163, 140, 95, 120, 95, 162, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/887.png"], ["Clear Body", "Infiltrator"]],
-["899", "Wyrdeer", ["Normal", "Psychic"], [179, 125, 92, 125, 95, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/899.png"], ["Intimidate", "Frisk"]],
-["902", "Basculegion", ["Water", "Ghost"], [195, 132, 85, 100, 95, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/902.png"], ["Rattled", "Adaptability"]],
+["899", "Wyrdeer", ["Normal", "Psychic"], [178, 125, 92, 125, 95, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/899.png"], ["Intimidate", "Frisk"]],
+["902", "Basculegion", ["Water", "Ghost"], [195, 132, 85, 100, 95, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/902.png"], ["Rattled", "Adaptability"], {gender:{
+  baseLabel:"Macho", altLabel:"Fêmea",
+  altStats:[195, 108, 85, 124, 95, 98],
+  altAbilities:["Rattled","Adaptability"]
+}}],
 ["903", "Sneasler", ["Fighting", "Poison"], [155, 150, 80, 60, 100, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/903.png"], ["Pressure", "Unburden"]],
 ["908", "Meowscarada", ["Grass", "Dark"], [151, 130, 90, 101, 90, 143, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/908.png"], ["Overgrow", "Protean"]],
 ["911", "Skeledirge", ["Fire", "Ghost"], [179, 95, 120, 130, 95, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/911.png"], ["Torrent", "Unaware"]],
@@ -659,7 +713,7 @@ const POKE_SEED = [
 ["939", "Bellibolt", ["Electric"], [184, 84, 111, 123, 103, 65, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/939.png"], ["Electromorphosis", "Static"]],
 ["968", "Orthworm", ["Steel"], [145, 105, 165, 80, 75, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/968.png"], ["Earth Eater", "Sand Veil"]],
 ["970", "Glimmora", ["Rock", "Poison"], [158, 75, 110, 150, 101, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/970.png"], ["Toxic Debris", "Corrosion"]],
-["970M", "Mega Glimmora", ["Rock", "Poison"], [158, 75, 130, 210, 121, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/970_f2.png"], ["Corrosion"]],
+["970M", "Mega Glimmora", ["Rock", "Poison"], [158, 110, 125, 170, 116, 121, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/970_f2.png"], ["Corrosion"]],
 ["979", "Annihilape", ["Fighting", "Ghost"], [185, 135, 100, 70, 110, 110, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/979.png"], ["Vital Spirit", "Inner Focus"]],
 ["981", "Farigiraf", ["Normal", "Psychic"], [195, 110, 90, 130, 90, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/981.png"], ["Cud Chew", "Armor Tail"]],
 ["983", "Kingambit", ["Dark", "Steel"], [175, 155, 140, 80, 105, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/983.png"], ["Defiant", "Supreme Overlord"]],
@@ -742,62 +796,68 @@ const MOVE_SEED = [
    DATA — HABILIDADES (seed curado)
 ============================================================= */
 const ABILITY_SEED = [
-["Overgrow","Aumenta o poder de golpes do tipo Planta quando o HP está baixo."],
-["Blaze","Aumenta o poder de golpes do tipo Fogo quando o HP está baixo."],
-["Torrent","Aumenta o poder de golpes do tipo Água quando o HP está baixo."],
-["Intimidate","Reduz o Ataque dos oponentes ao entrar em campo."],
-["Levitate","Concede imunidade a golpes do tipo Terra."],
-["Sturdy","Impede que o Pokémon seja nocauteado de um golpe com HP cheio."],
-["Static","Pode paralisar o oponente ao entrar em contato."],
-["Synchronize","Reflete condições de status causadas por oponentes."],
-["Mold Breaker","Ignora habilidades defensivas do oponente."],
-["Drought","Intensifica o sol ao entrar em campo."],
-["Drizzle","Invoca chuva ao entrar em campo."],
-["Sand Stream","Invoca tempestade de areia ao entrar em campo."],
-["Snow Warning","Invoca neve/granizo ao entrar em campo."],
-["Speed Boost","Aumenta a Velocidade a cada turno."],
-["Adaptability","Aumenta o bônus de STAB de 1.5x para 2x."],
-["Technician","Aumenta o poder de golpes fracos (60 ou menos de poder base)."],
-["Multiscale","Reduz o dano recebido quando o HP está cheio."],
-["Regenerator","Recupera HP ao ser trocado para fora de batalha."],
-["Protean","Muda o tipo do usuário para o tipo do golpe usado."],
-["Guts","Aumenta o Ataque quando afetado por uma condição de status."],
-["Unaware","Ignora mudanças de stat do oponente ao calcular dano."],
-["Magic Bounce","Reflete golpes de status de volta ao usuário original."],
-["Trace","Copia a habilidade de um oponente ao entrar em campo."],
-["Water Absorb","Cura HP ao ser atingido por golpes do tipo Água."],
-["Volt Absorb","Cura HP ao ser atingido por golpes do tipo Elétrico."],
-["Flash Fire","Absorve golpes de Fogo e aumenta o próprio poder de Fogo."],
-["Pressure","Faz o oponente gastar PP extra ao usar golpes contra o usuário."],
-["Rough Skin","Causa dano de contato a quem atacar fisicamente o usuário."],
-["Moxie","Aumenta o Ataque após nocautear um oponente."],
-["Gale Wings","Concede prioridade a golpes do tipo Voador com HP cheio."],
-["Sand Rush","Dobra a Velocidade durante tempestade de areia."],
-["Thick Fat","Reduz o dano recebido de golpes de Fogo e Gelo."],
-["Clear Body","Impede que o oponente reduza os stats do usuário."],
-["No Guard","Garante que todos os golpes (do usuário e do oponente) acertem."],
-["Cursed Body","Pode desabilitar o golpe usado contra o usuário."],
-["Stance Change","Muda de forma ao usar golpe de ataque ou King's Shield."],
-["Good as Gold","Imune a golpes de status de outros Pokémon."],
-["Contrary","Inverte o efeito de mudanças de stat."],
-["Unseen Fist","Golpes de contato ignoram efeitos de Protect."],
-["Grassy Surge","Cria Terreno Gramado ao entrar em campo."],
-["Libero","Muda o tipo do usuário para o tipo do golpe usado."],
+  // Habilidades originais
+  ["Overgrow","Aumenta o poder de golpes do tipo Planta quando o HP está baixo."],
+  ["Blaze","Aumenta o poder de golpes do tipo Fogo quando o HP está baixo."],
+  ["Torrent","Aumenta o poder de golpes do tipo Água quando o HP está baixo."],
+  ["Intimidate","Reduz o Ataque dos oponentes ao entrar em campo."],
+  ["Levitate","Concede imunidade a golpes do tipo Terra."],
+  ["Sturdy","Impede que o Pokémon seja nocauteado de um golpe com HP cheio."],
+  ["Static","Pode paralisar o oponente ao entrar em contato."],
+  ["Synchronize","Reflete condições de status causadas por oponentes."],
+  ["Mold Breaker","Ignora habilidades defensivas do oponente."],
+  ["Drought","Intensifica o sol ao entrar em campo."],
+  ["Drizzle","Invoca chuva ao entrar em campo."],
+  ["Sand Stream","Invoca tempestade de areia ao entrar em campo."],
+  ["Snow Warning","Invoca neve/granizo ao entrar em campo."],
+  ["Speed Boost","Aumenta a Velocidade a cada turno."],
+  ["Adaptability","Aumenta o bônus de STAB de 1.5x para 2x."],
+  ["Technician","Aumenta o poder de golpes fracos (60 ou menos de poder base)."],
+  ["Multiscale","Reduz o dano recebido quando o HP está cheio."],
+  ["Regenerator","Recupera HP ao ser trocado para fora de batalha."],
+  ["Protean","Muda o tipo do usuário para o tipo do golpe usado."],
+  ["Guts","Aumenta o Ataque quando afetado por uma condição de status."],
+  ["Unaware","Ignora mudanças de stat do oponente ao calcular dano."],
+  ["Magic Bounce","Reflete golpes de status de volta ao usuário original."],
+  ["Trace","Copia a habilidade de um oponente ao entrar em campo."],
+  ["Water Absorb","Cura HP ao ser atingido por golpes do tipo Água."],
+  ["Volt Absorb","Cura HP ao ser atingido por golpes do tipo Elétrico."],
+  ["Flash Fire","Absorve golpes de Fogo e aumenta o próprio poder de Fogo."],
+  ["Pressure","Faz o oponente gastar PP extra ao usar golpes contra o usuário."],
+  ["Rough Skin","Causa dano de contato a quem atacar fisicamente o usuário."],
+  ["Moxie","Aumenta o Ataque após nocautear um oponente."],
+  ["Gale Wings","Concede prioridade a golpes do tipo Voador com HP cheio."],
+  ["Sand Rush","Dobra a Velocidade durante tempestade de areia."],
+  ["Thick Fat","Reduz o dano recebido de golpes de Fogo e Gelo."],
+  ["Clear Body","Impede que o oponente reduza os stats do usuário."],
+  ["No Guard","Garante que todos os golpes (do usuário e do oponente) acertem."],
+  ["Cursed Body","Pode desabilitar o golpe usado contra o usuário."],
+  ["Stance Change","Muda de forma ao usar golpe de ataque ou King's Shield."],
+  ["Good as Gold","Imune a golpes de status de outros Pokémon."],
+  ["Contrary","Inverte o efeito de mudanças de stat."],
+  ["Unseen Fist","Golpes de contato ignoram efeitos de Protect."],
+  ["Grassy Surge","Cria Terreno Gramado ao entrar em campo."],
+  ["Libero","Muda o tipo do usuário para o tipo do golpe usado."],
+  ["Intrepid Sword","Aumenta o Ataque ao entrar em campo (ativada uma vez por batalha)."],
+  ["Dauntless Shield","Aumenta a Defesa ao entrar em campo (ativada uma vez por batalha)."],
+  ["Protosynthesis","Aumenta o stat mais alto sob luz solar intensa ou com Booster Energy."],
+  ["Quark Drive","Aumenta o stat mais alto em campo elétrico ou com Booster Energy."],
+  ["Magic Guard","Protege o Pokémon de danos indiretos (como veneno, clima ou recoil)."],
+  ["Iron Barbs","Causa dano de contato ao oponente que atacar fisicamente."],
+  ["Sheer Force","Remove efeitos secundários de golpes para aumentar o poder deles."],
+  ["Serene Grace","Dobra a chance de efeitos secundários dos golpes acontecerem."],
+  ["Prankster","Concede prioridade a movimentos de status."],
+  ["Dazzling","Impede que o oponente use golpes com prioridade contra o usuário."],
+  ["Queenly Majesty","Impede que o oponente use golpes com prioridade contra o usuário."],
+  ["Infiltrator","Ignora barreiras como Reflect, Light Screen e Substitute do oponente."],
+  ["Dry Skin","Recupera HP na chuva ou água, mas sofre mais dano de Fogo e sol."],
+  ["Flash Fire","Anula danos de Fogo e aumenta o poder dos próprios golpes de Fogo."]
 ];
 
 /* =============================================================
    DATA — ITENS (seed curado)
 ============================================================= */
-ITEM_SEED = [
-
-
-["Cheri Berry","Recuperação · Berry","Cura a paralisia."],
-["Pecha Berry","Recuperação · Berry","Cura o envenenamento."],
-["Rawst Berry","Recuperação · Berry","Cura a queimaduras."],
-["Aspear Berry","Recuperação · Berry","Cura o congelamento."],
-["Persim Berry","Recuperação · Berry","Cura a confusão."],
-["Oran Berry","Recuperação · Berry","Restaura 10HP do portador, quando o HP fica abaixo de 50%."],
-["Chilan Berry","Defesa · Berry","Reduz pela metade o dano de um golpe do tipo Normal."],
+const ITEM_SEED = [
 ["Occa Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Fogo."],
 ["Passho Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Água."],
 ["Wacan Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Elétrico."],
@@ -815,10 +875,8 @@ ITEM_SEED = [
 ["Colbur Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Sombrio."],
 ["Babiri Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Aço."],
 ["Roseli Berry","Defesa · Berry","Reduz pela metade o dano de um golpe supereficaz do tipo Fada."],
-
 ["Focus Sash","Defesa","Permite sobreviver com 1 HP a um golpe que nocautearia com HP cheio."],
-["Focus Band","Defesa","Cerca de 10% de chance de sobreviver com 1 HP a um golpe que nocautearia."],
-
+["Focus Band","Sobrevivência","Cerca de 10% de chance de sobreviver com 1 HP a um golpe que nocautearia."],
 ["Silk Scarf","Poder","Aumenta o poder de golpes do tipo Normal."],
 ["Charcoal","Poder","Aumenta o poder de golpes do tipo Fogo."],
 ["Mystic Water","Poder","Aumenta o poder de golpes do tipo Água."],
@@ -836,24 +894,22 @@ ITEM_SEED = [
 ["Dragon Fang","Poder","Aumenta o poder de golpes do tipo Dragão."],
 ["Black Glasses","Poder","Aumenta o poder de golpes do tipo Sombrio."],
 ["Metal Coat","Poder","Aumenta o poder de golpes do tipo Aço."],
-["Fairy Feather","Poder","Aumenta o poder de golpes do tipo Fada."],
+["Pixie Plate","Poder","Aumenta o poder de golpes do tipo Fada."],
 ["Expert Belt","Poder","Aumenta o poder de golpes supereficazes em 20%."],
 ["Life Orb","Poder","Aumenta o poder dos golpes em 30%, mas causa recuo de 10% do HP."],
 ["Muscle Band","Poder","Aumenta o poder de golpes físicos em 10%."],
 ["Wise Glasses","Poder","Aumenta o poder de golpes especiais em 10%."],
-["Metronome","Poder","Metronome aumenta o dano em 20% a cada uso consecutivo do mesmo golpe, acumulando até 100% de bônus."],
-
+["Choice Band","Poder","Aumenta o Ataque em 50%, mas trava o usuário em um único golpe."],
+["Choice Specs","Poder","Aumenta o Sp. Atk em 50%, mas trava o usuário em um único golpe."],
+["Weakness Policy","Poder","Aumenta drasticamente Ataque e Sp. Atk ao ser atingido por golpe supereficaz."],
 ["Leftovers","Recuperação","Recupera 1/16 do HP máximo a cada turno."],
 ["Sitrus Berry","Recuperação · Berry","Recupera 25% do HP máximo quando o HP fica abaixo de 50%."],
-["Shell Bell","Recuperação","Restaura 1/8 do HP do usuário sempre que ele causa dano a um oponente com um ataque."],
 ["Big Root","Recuperação","Aumenta o HP recuperado por golpes de dreno."],
-["Lum Berry","Recuperação","Cura qualquer condição de status ou confusão."],
-
+["Lum Berry","Cura","Cura qualquer condição de status ou confusão."],
 ["Damp Rock","Clima","Estende a duração da chuva por mais turnos."],
 ["Heat Rock","Clima","Estende a duração do sol forte por mais turnos."],
 ["Smooth Rock","Clima","Estende a duração da tempestade de areia."],
 ["Icy Rock","Clima","Estende a duração da neve."],
-
 ["Iron Ball","Características","Reduz a Velocidade em 50%. Prende o usuário no chão e remove sua imunidade a Terra, Pontas, Pontas Tóxicas e Rede Pegajosa."],
 ["Wide Lens","Características","Aumenta ligeiramente a precisão dos golpes."],
 ["Zoom Lens","Características","Aumenta a precisão se o usuário agir depois do oponente."],
@@ -862,6 +918,12 @@ ITEM_SEED = [
 ["Choice Scarf","Características","Aumenta a Velocidade em 50%, mas trava o usuário em um único golpe."],
 ["Bright Powder","Características","Reduz levemente a precisão dos golpes do oponente."],
 ["Scope Lens","Características","Aumenta a chance de desferir acertos críticos."],
+["Rocky Helmet","Punição","Causa dano de recuo a quem atacar o usuário por contato."],
+["Assault Vest","Defesa","Aumenta o Sp. Def em 50%, mas impede o uso de golpes de status."],
+["Eviolite","Defesa","Aumenta Defesa e Sp. Def de Pokémon que ainda podem evoluir."],
+["Air Balloon","Imunidade","Concede imunidade a golpes de Terra até ser atingido."],
+["Toxic Orb","Status","Envenena gravemente o usuário ao final do turno."],
+["Flame Orb","Status","Causa queimadura no usuário ao final do turno."]
 ];
 
 /* =============================================================
@@ -886,6 +948,8 @@ let isOwner = false;
 // to the new shape where the image lives inside stats as a 7th value: [HP,Atk,Def,SpA,SpD,Spe,linkimg]
 // runs unconditionally (independent of SEED_VERSION) so nobody's saved images get lost
 function migratePokeImages(list){
+  // drop any corrupted/malformed entries (e.g. null/undefined saved from a previous bug)
+  list = list.filter(p=>Array.isArray(p) && p.length>=5 && Array.isArray(p[2]) && Array.isArray(p[3]));
   list.forEach(p=>{
     if(p.length>5 && p[5] && !p[3][6]) p[3][6] = p[5];
     if(p.length>5) p.length = 5;
@@ -893,14 +957,18 @@ function migratePokeImages(list){
   return list;
 }
 
+function sanitizeList(list, minLen){
+  return Array.isArray(list) ? list.filter(x=>Array.isArray(x) && x.length>=minLen) : list;
+}
+
 function applyLoaded(saved){
   const savedVersion = saved.seedVersion || 0;
   const needsPokeRefresh = savedVersion < SEED_VERSION;
   DB.pokemon = migratePokeImages((!needsPokeRefresh && saved.pokemon && saved.pokemon.length) ? saved.pokemon : [...POKE_SEED]);
-  DB.items = (!needsPokeRefresh && saved.items && saved.items.length) ? saved.items : [...ITEM_SEED];
-  DB.moves = saved.moves && saved.moves.length ? saved.moves : [...MOVE_SEED];
-  DB.abilities = saved.abilities && saved.abilities.length ? saved.abilities : [...ABILITY_SEED];
-  DB.teams = saved.teams || [];
+  DB.items = sanitizeList((!needsPokeRefresh && saved.items && saved.items.length) ? saved.items : [...ITEM_SEED], 3);
+  DB.moves = sanitizeList(saved.moves && saved.moves.length ? saved.moves : [...MOVE_SEED], 6);
+  DB.abilities = sanitizeList(saved.abilities && saved.abilities.length ? saved.abilities : [...ABILITY_SEED], 2);
+  DB.teams = Array.isArray(saved.teams) ? saved.teams.filter(t=>t && Array.isArray(t.members)) : [];
   DB.siteName = saved.siteName || 'CHAMPION DEX';
   DB.ownerHash = saved.ownerHash || null;
   DB.seedVersion = SEED_VERSION;
@@ -911,8 +979,10 @@ async function loadDB(){
   try{ const r = await window.storage.get('champion-dex-db', false); if(r && r.value) personalData = JSON.parse(r.value); }catch(e){}
   if(personalData){
     const wasOutdated = (personalData.seedVersion||0) < SEED_VERSION;
+    const rawPokeCount = Array.isArray(personalData.pokemon) ? personalData.pokemon.length : 0;
     applyLoaded(personalData);
-    if(wasOutdated) await saveDB(); // persist the refreshed pokemon/items right away
+    const wasCorrupted = rawPokeCount !== DB.pokemon.length;
+    if(wasOutdated || wasCorrupted) await saveDB(); // persist the refreshed/cleaned data right away
   }
 }
 async function saveDB(){
@@ -1061,6 +1131,20 @@ function baseNumOf(num){ const m = String(num).match(/^(\d+)(M[XY]?)$/); return 
 function isMegaNum(num){ return baseNumOf(num) !== null; }
 function getMegasFor(baseNum){ return DB.pokemon.filter(p => baseNumOf(p[0]) === String(baseNum)); }
 
+// Regional form helpers: a regional form's dex num is baseNum + "-" + região (A=Alola, G=Galar, H=Hisui, P=Paldea)
+// ex: "037-A" = Vulpix de Alola, "157-H" = Typhlosion de Hisui
+const REGION_LABELS = {A:'Alola', G:'Galar', H:'Hisui', P:'Paldea'};
+function regionalInfo(num){
+  const m = String(num).match(/^(\d+)-(A|G|H|P)$/);
+  return m ? { baseNum:m[1], code:m[2], label:REGION_LABELS[m[2]]||m[2] } : null;
+}
+function isRegionalNum(num){ return regionalInfo(num) !== null; }
+function getRegionalsFor(baseNum){ return DB.pokemon.filter(p => { const info = regionalInfo(p[0]); return info && info.baseNum === String(baseNum); }); }
+
+// Gender-variant helpers: some species (Meowstic, Basculegion) have different types/stats/abilities per gênero.
+// Stored as a 6th array slot on the pokemon entry: p[5] = { gender: { baseLabel, altLabel, altTypes?, altStats, altAbilities, altImage? } }
+function genderDataOf(p){ return (p && p[5] && p[5].gender) ? p[5].gender : null; }
+
 /* =============================================================
    NAV
 ============================================================= */
@@ -1103,6 +1187,7 @@ function renderPokeGrid(){
   let list = DB.pokemon.filter(p=>{
     const [num,name,types] = p;
     if(isMegaNum(num)) return false; // megas only appear via the mega-stone icon
+    if(isRegionalNum(num)) return false; // regional forms only appear via the regional-badge icon
     if(search && !name.toLowerCase().includes(search)) return false;
     if(typeF && !types.includes(typeF)) return false;
     return true;
@@ -1111,9 +1196,10 @@ function renderPokeGrid(){
   else if(sortBy==='bst') list.sort((a,b)=>bst(b[3])-bst(a[3]));
   else list.sort((a,b)=>(parseInt(a[0],10)||0)-(parseInt(b[0],10)||0));
 
-  const baseCount = DB.pokemon.filter(p=>!isMegaNum(p[0])).length;
-  const megaCount = DB.pokemon.length - baseCount;
-  document.getElementById('pokeCount').textContent = baseCount + ' registrados' + (megaCount?` · ${megaCount} Mega`:'');
+  const megaCount = DB.pokemon.filter(p=>isMegaNum(p[0])).length;
+  const regionalCount = DB.pokemon.filter(p=>isRegionalNum(p[0])).length;
+  const baseCount = DB.pokemon.length - megaCount - regionalCount;
+  document.getElementById('pokeCount').textContent = baseCount + ' registrados' + (megaCount?` · ${megaCount} Mega`:'') + (regionalCount?` · ${regionalCount} Regional`:'');
   const grid = document.getElementById('pokeGrid');
   if(!list.length){ grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="big">◈</div>Nenhum Pokémon encontrado.</div>`; return; }
   grid.innerHTML = list.map(p=>{
@@ -1132,14 +1218,22 @@ function renderPokeGrid(){
       const suffix = mg[0].endsWith('MX')?'X':mg[0].endsWith('MY')?'Y':'';
       return `<div class="mega-stone" title="Mega Evolução${suffix?' '+suffix:''}" onclick='event.stopPropagation(); openPokeDetail(${JSON.stringify(mg[0])});'><span>${suffix||'M'}</span></div>`;
     }).join('')}</div>` : '';
+    const regionalHtml = (!pokeSelectMode && getRegionalsFor(num).length) ? `<div class="regional-row">${getRegionalsFor(num).map(rg=>{
+      const info = regionalInfo(rg[0]);
+      return `<div class="regional-badge" title="Forma Regional: ${info.label}" onclick='event.stopPropagation(); openPokeDetail(${JSON.stringify(rg[0])});'><span>${info.code}</span></div>`;
+    }).join('')}</div>` : '';
+    const gd = genderDataOf(p);
+    const genderBadge = (!pokeSelectMode && gd) ? `<div class="gender-badge" title="Status muda por gênero">♂♀</div>` : '';
     const cardClick = pokeSelectMode ? `togglePokeSelect(${JSON.stringify(String(num))})` : `openPokeDetail(${JSON.stringify(num)})`;
     return `<div class="pcard ${pokeSelectMode?'selectable':''} ${isSel?'selected':''}" onclick='${cardClick}'>
       ${pokeSelectMode?`<div class="select-check">${isSel?'✓':''}</div>`:''}
+      ${genderBadge}
       ${imgHtml}
       <div class="num">#${num}</div>
       <h3>${name}</h3>
       <div class="types">${types.map(typeBadge).join('')}</div>
       ${megaHtml}
+      ${regionalHtml}
       <div class="bst-bar"><i style="width:${pct}%"></i></div>
       <div class="bst-label"><span>BST</span><span>${total}</span></div>
     </div>`;
@@ -1175,11 +1269,17 @@ document.getElementById('btnDeleteSelectedPoke').addEventListener('click', async
 });
 ['pokeSearch','pokeTypeFilter','pokeSort'].forEach(id=>document.getElementById(id).addEventListener('input',renderPokeGrid));
 
-function openPokeDetail(num){
+function openPokeDetail(num, genderView){
   const p = DB.pokemon.find(x=>String(x[0])===String(num));
   if(!p) return;
-  const [pnum,name,types,stats,abilities] = p;
-  const image = stats[6];
+  const [pnum,baseName,baseTypes,baseStats,baseAbilities] = p;
+  const gd = genderDataOf(p);
+  const showFemale = !!(genderView==='F' && gd);
+  const types = (showFemale && gd.altTypes) ? gd.altTypes : baseTypes;
+  const stats = showFemale ? (gd.altStats || baseStats) : baseStats;
+  const abilities = showFemale ? (gd.altAbilities || baseAbilities) : baseAbilities;
+  const image = (showFemale && gd.altImage) ? gd.altImage : baseStats[6];
+  const name = baseName;
   const maxStat = 200;
   const statHtml = STAT_KEYS.map((k,i)=>{
     const v = stats[i];
@@ -1188,27 +1288,48 @@ function openPokeDetail(num){
     return `<div class="stat-row"><span>${STAT_LABEL[k]}</span><div class="bar"><i style="width:${pct}%;background:${col}"></i></div><span>${v}</span></div>`;
   }).join('');
 
-  // type matchup vs this pokemon
+  // type matchup vs this pokemon (forma exibida)
   const weak=[],resist=[],immune=[];
   TYPES.forEach(t=>{
     const m = eff(t, types[0], types[1]);
     if(m>1) weak.push(t); else if(m>0 && m<1) resist.push(t); else if(m===0) immune.push(t);
   });
 
-  const megasHere = isMegaNum(pnum) ? [] : getMegasFor(pnum);
+  const megasHere = (isMegaNum(pnum)||isRegionalNum(pnum)) ? [] : getMegasFor(pnum);
   const megaHtml = megasHere.length ? `<div class="mega-row">${megasHere.map(mg=>{
     const suffix = mg[0].endsWith('MX')?'X':mg[0].endsWith('MY')?'Y':'';
     return `<div class="mega-stone" title="Mega Evolução${suffix?' '+suffix:''}" onclick='openPokeDetail(${JSON.stringify(mg[0])});'><span>${suffix||'M'}</span></div>`;
   }).join('')}</div>` : '';
 
+  const regionalsHere = (isMegaNum(pnum)||isRegionalNum(pnum)) ? [] : getRegionalsFor(pnum);
+  const regionalHtml = regionalsHere.length ? `<div class="regional-row">${regionalsHere.map(rg=>{
+    const info = regionalInfo(rg[0]);
+    return `<div class="regional-badge" title="Forma Regional: ${info.label}" onclick='openPokeDetail(${JSON.stringify(rg[0])});'><span>${info.code}</span></div>`;
+  }).join('')}</div>` : '';
+
+  const backBtn = isMegaNum(pnum)
+    ? `<button class="mega-back" onclick='openPokeDetail(${JSON.stringify(baseNumOf(pnum))})'>← Voltar para forma base</button>`
+    : isRegionalNum(pnum)
+    ? `<button class="regional-back" onclick='openPokeDetail(${JSON.stringify(regionalInfo(pnum).baseNum)})'>← Voltar para forma base</button>`
+    : '';
+
+  const regionTag = isRegionalNum(pnum) ? ` <span class="pill" style="margin-left:6px;">Forma ${regionalInfo(pnum).label}</span>` : '';
+
+  const genderToggle = gd ? `<div class="gender-toggle">
+      <button class="btn small ${!showFemale?'active':'secondary'}" onclick='openPokeDetail(${JSON.stringify(pnum)}, "M")'>♂ ${gd.baseLabel||'Macho'}</button>
+      <button class="btn small ${showFemale?'active':'secondary'}" onclick='openPokeDetail(${JSON.stringify(pnum)}, "F")'>♀ ${gd.altLabel||'Fêmea'}</button>
+    </div>` : '';
+
   openModal(`
-    ${isMegaNum(pnum) ? `<button class="mega-back" onclick='openPokeDetail(${JSON.stringify(baseNumOf(pnum))})'>← Voltar para forma base</button>` : ''}
+    ${backBtn}
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;">
       <div>
         <div style="font-family:var(--mono);color:var(--muted);font-size:12px;">#${pnum}</div>
-        <h2>${name}</h2>
+        <h2>${name}${regionTag}</h2>
         <div class="types" style="margin:6px 0 8px;">${types.map(typeBadge).join('')}</div>
         ${megaHtml}
+        ${regionalHtml}
+        ${genderToggle}
       </div>
       <div style="display:flex;gap:8px;flex-shrink:0;">
         <button class="btn secondary small" onclick='openEditPoke(${JSON.stringify(pnum)})'>Editar</button>
@@ -1244,6 +1365,7 @@ function openPokeForm(existing){
     <div class="form-grid">
       <div><label>Número (Dex)</label><input type="text" id="npNum" value="${num}" placeholder="ex: 900" ${existing?'disabled':''}></div>
       <div style="grid-column:1/-1;margin-top:-6px;"><small style="color:var(--muted);font-size:10.5px;">Dica: para criar uma Mega Evolução de um Pokémon já existente, use o número dele + "M" (ex: base "306" → mega "306M"; ou "MX"/"MY" para formas X/Y como "006MX"). O ícone de pedra vai aparecer automaticamente no card da forma base.</small></div>
+      <div style="grid-column:1/-1;margin-top:-6px;"><small style="color:var(--muted);font-size:10.5px;">Dica: para criar uma Forma Regional, use o número base + "-" + código da região: A = Alola, G = Galar, H = Hisui, P = Paldea (ex: "037-A" para Vulpix de Alola, "157-H" para Typhlosion de Hisui). O ícone quadrado vai aparecer automaticamente no card da forma base.</small></div>
       <div><label>Nome</label><input type="text" id="npName" value="${name}" placeholder="ex: Meu Pokémon"></div>
       <div><label>Tipo 1</label><select id="npType1">${TYPES.map(t=>`<option value="${t}" ${types[0]===t?'selected':''}>${TYPE_PT[t]}</option>`).join('')}</select></div>
       <div><label>Tipo 2 (opcional)</label><select id="npType2"><option value="">—</option>${TYPES.map(t=>`<option value="${t}" ${types[1]===t?'selected':''}>${TYPE_PT[t]}</option>`).join('')}</select></div>
