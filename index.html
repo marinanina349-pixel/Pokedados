@@ -516,8 +516,8 @@ const POKE_SEED = [
 ["127M", "Mega Pinsir", ["Bug", "Flying"], [140, 175, 140, 85, 110, 125, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/127_f2.png"], ["Aerilate"]],
 ["128", "Tauros", ["Normal"], [150, 120, 115, 60, 90, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128.png"], ["Intimidate", "Anger Point"]],
 ["128-P", "Tauros Paldea Lutador", ["Fighting"], [150, 130, 125, 50, 90, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128_f2.png"], ["Intimidate", "Anger Point", "Cud Chew"]],
-["128-P", "Tauros Paldea Fogo", ["Fighting","Fire"], [150, 130, 125, 50, 90, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128_f3.png"], ["Intimidate", "Anger Point", "Cud Chew"]],
-["128-P", "Tauros Paldea Água", ["Fighting","Water"], [150, 130, 125, 50, 90, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128_f4.png"], ["Intimidate", "Anger Point", "Cud Chew"]],
+["128-P2", "Tauros Paldea Fogo", ["Fighting","Fire"], [150, 130, 125, 50, 90, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128_f3.png"], ["Intimidate", "Anger Point", "Cud Chew"]],
+["128-P3", "Tauros Paldea Água", ["Fighting","Water"], [150, 130, 125, 50, 90, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128_f4.png"], ["Intimidate", "Anger Point", "Cud Chew"]],
 ["130", "Gyarados", ["Water", "Flying"], [170, 145, 99, 80, 120, 101, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/130.png"], ["Intimidate", "Moxie"]],
 ["130M", "Mega Gyarados", ["Water", "Dark"], [170, 175, 129, 90, 150, 101, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/130_f2.png"], ["Mold Breaker"]],
 ["132", "Ditto", ["Normal"], [123, 68, 68, 68, 68, 68, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/132.png"], ["Limber", "Imposter"]],
@@ -627,11 +627,6 @@ const POKE_SEED = [
 ["478", "Froslass", ["Ice", "Ghost"], [145, 100, 90, 100, 90, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/478.png"], ["Snow Cloak", "Cursed Body"]],
 ["478M", "Mega Froslass", ["Ice", "Ghost"], [145, 100, 90, 160, 120, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/478_f2.png"], ["Snow Warning"]],
 ["479", "Rotom", ["Electric", "Ghost"], [125, 70, 97, 115, 97, 111, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479.png"], ["Levitate"]],
-["479H", "Heat Rotom", ["Electric", "Fire"], [125, 85, 127, 125, 127, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f2.png"], ["Levitate"]],
-["479W", "Wash Rotom", ["Electric", "Water"], [125, 85, 127, 125, 127, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f3.png"], ["Levitate"]],
-["479F", "Frost Rotom", ["Electric", "Ice"], [125, 85, 127, 125, 127, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f4.png"], ["Levitate"]],
-["479S", "Fan Rotom", ["Electric", "Flying"], [125, 85, 127, 125, 127, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f5.png"], ["Levitate"]],
-["479M", "Mow Rotom", ["Electric", "Grass"], [125, 85, 127, 125, 127, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f6.png"], ["Levitate"]],
 ["497", "Serperior", ["Grass"], [150, 95, 115, 95, 115, 133, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/497.png"], ["Overgrow", "Contrary"]],
 ["500", "Emboar", ["Fire", "Fighting"], [185, 143, 85, 120, 85, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/500.png"], ["Blaze", "Reckless"]],
 ["500M", "Mega Emboar", ["Fire", "Fighting"], [185, 168, 95, 130, 130, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/500_f2.png"], ["Reckless"]],
@@ -1004,7 +999,6 @@ let isOwner = false;
 // to the new shape where the image lives inside stats as a 7th value: [HP,Atk,Def,SpA,SpD,Spe,linkimg]
 // runs unconditionally (independent of SEED_VERSION) so nobody's saved images get lost
 function migratePokeImages(list){
-  // drop any corrupted/malformed entries (e.g. null/undefined saved from a previous bug)
   list = list.filter(p=>Array.isArray(p) && p.length>=5 && Array.isArray(p[2]) && Array.isArray(p[3]));
   list.forEach(p=>{
     if(p.length>5 && p[5] && !p[3][6]) p[3][6] = p[5];
@@ -1038,7 +1032,7 @@ async function loadDB(){
     const rawPokeCount = Array.isArray(personalData.pokemon) ? personalData.pokemon.length : 0;
     applyLoaded(personalData);
     const wasCorrupted = rawPokeCount !== DB.pokemon.length;
-    if(wasOutdated || wasCorrupted) await saveDB(); // persist the refreshed/cleaned data right away
+    if(wasOutdated || wasCorrupted) await saveDB();
   }
 }
 async function saveDB(){
@@ -1160,7 +1154,7 @@ async function handleImportFile(evt){
     if(!confirm('Importar este arquivo vai SUBSTITUIR todos os dados atuais do blog (Pokémons, times, golpes, habilidades, itens). Continuar?')) return;
     const keepHash = DB.ownerHash;
     applyLoaded(data);
-    if(!data.ownerHash) DB.ownerHash = keepHash; // don't lose ownership if backup predates the owner system
+    if(!data.ownerHash) DB.ownerHash = keepHash;
     await saveDB();
     renderEverything();
     alert('Backup importado com sucesso!');
@@ -1188,16 +1182,16 @@ function isMegaNum(num){ return baseNumOf(num) !== null; }
 function getMegasFor(baseNum){ return DB.pokemon.filter(p => baseNumOf(p[0]) === String(baseNum)); }
 
 // Regional form helpers: a regional form's dex num is baseNum + "-" + região (A=Alola, G=Galar, H=Hisui, P=Paldea)
-// ex: "037-A" = Vulpix de Alola, "157-H" = Typhlosion de Hisui
+// suporta um dígito extra para variantes múltiplas da mesma região (ex: "128-P","128-P2","128-P3" = 3 raças de Tauros de Paldea)
 const REGION_LABELS = {A:'Alola', G:'Galar', H:'Hisui', P:'Paldea'};
 function regionalInfo(num){
-  const m = String(num).match(/^(\d+)-(A|G|H|P)$/);
-  return m ? { baseNum:m[1], code:m[2], label:REGION_LABELS[m[2]]||m[2] } : null;
+  const m = String(num).match(/^(\d+)-(A|G|H|P)(\d)?$/);
+  return m ? { baseNum:m[1], code:m[2], variant:m[3]||'', label:REGION_LABELS[m[2]]||m[2] } : null;
 }
 function isRegionalNum(num){ return regionalInfo(num) !== null; }
 function getRegionalsFor(baseNum){ return DB.pokemon.filter(p => { const info = regionalInfo(p[0]); return info && info.baseNum === String(baseNum); }); }
 
-// Gender-variant helpers: some species (Meowstic, Basculegion) have different types/stats/abilities per gênero.
+// Gender-variant helpers: some species (Meowstic, Basculegion, Pyroar) have different types/stats/abilities per gênero.
 // Stored as a 6th array slot on the pokemon entry: p[5] = { gender: { baseLabel, altLabel, altTypes?, altStats, altAbilities, altImage? } }
 function genderDataOf(p){ return (p && p[5] && p[5].gender) ? p[5].gender : null; }
 
@@ -1263,9 +1257,9 @@ function renderPokeGrid(){
   const sortBy = document.getElementById('pokeSort').value;
   let list = DB.pokemon.filter(p=>{
     const [num,name,types] = p;
-    if(isMegaNum(num)) return false; // megas only appear via o ícone
-    if(isRegionalNum(num)) return false; // formas regionais só aparecem via o ícone
-    if(isRotomFormNum(num)) return false; // formas de Rotom só aparecem via o ícone
+    if(isMegaNum(num)) return false;
+    if(isRegionalNum(num)) return false;
+    if(isRotomFormNum(num)) return false;
     if(search && !name.toLowerCase().includes(search)) return false;
     if(typeF && !types.includes(typeF)) return false;
     return true;
@@ -1299,7 +1293,7 @@ function renderPokeGrid(){
     }).join('')}</div>` : '';
     const regionalHtml = (!pokeSelectMode && getRegionalsFor(num).length) ? `<div class="regional-row">${getRegionalsFor(num).map(rg=>{
       const info = regionalInfo(rg[0]);
-      return `<div class="regional-badge" title="Forma Regional: ${info.label}" onclick='event.stopPropagation(); openPokeDetail(${JSON.stringify(rg[0])});'><span>${info.code}</span></div>`;
+      return `<div class="regional-badge" title="Forma Regional: ${info.label}${info.variant?' '+info.variant:''}" onclick='event.stopPropagation(); openPokeDetail(${JSON.stringify(rg[0])});'><span>${info.code}${info.variant||''}</span></div>`;
     }).join('')}</div>` : '';
     const rotomHtml = (!pokeSelectMode && getRotomFormsFor(num).length) ? `<div class="rotom-row">${getRotomFormsFor(num).map(rf=>{
       const info = rotomFormInfo(rf[0]);
@@ -1372,7 +1366,6 @@ function openPokeDetail(num, genderView){
     return `<div class="stat-row"><span>${STAT_LABEL[k]}</span><div class="bar"><i style="width:${pct}%;background:${col}"></i></div><span>${v}</span></div>`;
   }).join('');
 
-  // type matchup vs this pokemon (forma exibida)
   const weak=[],resist=[],immune=[];
   TYPES.forEach(t=>{
     const m = eff(t, types[0], types[1]);
@@ -1388,7 +1381,7 @@ function openPokeDetail(num, genderView){
   const regionalsHere = (isMegaNum(pnum)||isRegionalNum(pnum)||isRotomFormNum(pnum)) ? [] : getRegionalsFor(pnum);
   const regionalHtml = regionalsHere.length ? `<div class="regional-row">${regionalsHere.map(rg=>{
     const info = regionalInfo(rg[0]);
-    return `<div class="regional-badge" title="Forma Regional: ${info.label}" onclick='openPokeDetail(${JSON.stringify(rg[0])});'><span>${info.code}</span></div>`;
+    return `<div class="regional-badge" title="Forma Regional: ${info.label}${info.variant?' '+info.variant:''}" onclick='openPokeDetail(${JSON.stringify(rg[0])});'><span>${info.code}${info.variant||''}</span></div>`;
   }).join('')}</div>` : '';
 
   const rotomFormsHere = (isMegaNum(pnum)||isRegionalNum(pnum)||isRotomFormNum(pnum)) ? [] : getRotomFormsFor(pnum);
@@ -1405,7 +1398,7 @@ function openPokeDetail(num, genderView){
     ? `<button class="rotom-back" onclick='openPokeDetail(${JSON.stringify(rotomFormInfo(pnum).baseNum)})'>← Voltar para forma base</button>`
     : '';
 
-  const regionTag = isRegionalNum(pnum) ? ` <span class="pill" style="margin-left:6px;">Forma ${regionalInfo(pnum).label}</span>` : '';
+  const regionTag = isRegionalNum(pnum) ? ` <span class="pill" style="margin-left:6px;">Forma ${regionalInfo(pnum).label}${regionalInfo(pnum).variant?' '+regionalInfo(pnum).variant:''}</span>` : '';
   const rotomTag = isRotomFormNum(pnum) ? ` <span class="pill" style="margin-left:6px;">Forma de Aparelho: ${rotomFormInfo(pnum).label}</span>` : '';
 
   const rotomManageBtn = (String(pnum)===ROTOM_BASE_NUM) ? `<button class="btn secondary small" onclick="openRotomFormsManager()">Gerenciar Formas</button>` : '';
@@ -1485,7 +1478,7 @@ async function saveRotomForms(){
     const num = rotomFormNum(ROTOM_BASE_NUM, code);
     const on = document.getElementById(`rf_${code}_on`).checked;
     const img = document.getElementById(`rf_${code}_img`).value.trim();
-    DB.pokemon = DB.pokemon.filter(x=>String(x[0])!==num); // remove a versão antiga e recria se marcada
+    DB.pokemon = DB.pokemon.filter(x=>String(x[0])!==num);
     if(on){
       const stats = [...baseP[3].slice(0,6), img];
       DB.pokemon.push([num, info.displayName, ['Electric', info.altType], stats, [...baseP[4]]]);
@@ -1556,13 +1549,12 @@ async function quickSaveImage(num, clear, fromDetail){
   const p = DB.pokemon.find(x=>String(x[0])===String(num));
   if(!p) return;
   const url = clear ? '' : document.getElementById('quickImgUrl').value.trim();
-  p[3][6] = url; // stats: [HP, Atk, Def, SpA, SpD, Spe, linkimg]
+  p[3][6] = url;
   await saveDB();
   if(fromDetail){ openPokeDetail(num); }
   else { closeModal(); renderPokeGrid(); }
 }
 
-// ---- Imagem da variante de gênero (ex: fêmea do Meowstic/Basculegion) ----
 function quickSetGenderImage(num){
   const p = DB.pokemon.find(x=>String(x[0])===String(num));
   const gd = genderDataOf(p);
@@ -1602,7 +1594,7 @@ async function saveNewPoke(){
   const stats = ['npHP','npAtk','npDef','npSpA','npSpD','npSpe'].map(id=>parseInt(document.getElementById(id).value)||0);
   const abilities = document.getElementById('npAbilities').value.split(',').map(s=>s.trim()).filter(Boolean);
   const image = document.getElementById('npImage').value.trim();
-  stats[6] = image; // stats: [HP, Atk, Def, SpA, SpD, Spe, linkimg]
+  stats[6] = image;
   const entry = [num,name,types,stats,abilities.length?abilities:['—']];
   if(editingPokeNum!==null){
     const idx = DB.pokemon.findIndex(x=>String(x[0])===String(editingPokeNum));
