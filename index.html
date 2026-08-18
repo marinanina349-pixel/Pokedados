@@ -152,6 +152,28 @@ input[type=text]:focus,select:focus,input[type=number]:focus{border-color:var(--
 .regional-back{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:12px;cursor:pointer;margin-bottom:6px;background:none;border:none;font-family:var(--body);}
 .regional-back:hover{color:#2f9e8f;}
 
+/* Formas de aparelho do Rotom */
+.rotom-row{display:flex;gap:6px;margin-top:2px;margin-bottom:8px;flex-wrap:wrap;}
+.rotom-badge{
+  width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(135deg,#e0654e,#b83a2e);
+  border:1px solid rgba(255,255,255,.35);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 0 8px rgba(224,101,78,.5);position:relative;
+}
+.rotom-badge span{font-size:10px;font-weight:900;color:#fff;font-family:var(--disp);}
+.rotom-badge:hover{filter:brightness(1.2);}
+.rotom-back{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:12px;cursor:pointer;margin-bottom:6px;background:none;border:none;font-family:var(--body);}
+.rotom-back:hover{color:#e0654e;}
+.rotom-form-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.rotom-form-row:last-child{border-bottom:none;}
+.rotom-form-row input[type=checkbox]{width:18px;height:18px;flex-shrink:0;accent-color:var(--gold);}
+.rotom-form-row .rf-name{flex:1;}
+.rotom-form-row .rf-name b{display:block;font-size:13.5px;}
+.rotom-form-row .rf-name span{font-size:11px;color:var(--muted);}
+.rotom-form-row input[type=text]{width:220px;}
+@media (max-width:560px){ .rotom-form-row input[type=text]{width:100%;} .rotom-form-row{flex-wrap:wrap;} }
+
 /* Variante de gênero */
 .gender-badge{
   position:absolute;top:10px;right:10px;z-index:2;
@@ -452,7 +474,6 @@ function eff(atk,def1,def2){
    DATA — POKÉMON (seed curado, com status base reais)
    stats: [HP, Atk, Def, SpA, SpD, Spe]
 ============================================================= */
-
 const POKE_SEED = [
 ["003", "Venusaur", ["Grass", "Poison"], [155, 102, 103, 120, 120, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/003.png"], ["Overgrow", "Chlorophyll"]],
 ["003M", "Mega Venusaur", ["Grass", "Poison"], [155, 120, 143, 142, 140, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/003_f2.png"], ["Thick Fat"]],
@@ -461,20 +482,22 @@ const POKE_SEED = [
 ["006MY", "Mega Charizard Y", ["Fire", "Flying"], [153, 124, 98, 179, 135, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/006_f3.png"], ["Drought"]],
 ["009", "Blastoise", ["Water"], [154, 103, 120, 105, 125, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/009.png"], ["Torrent", "Rain Dish"]],
 ["009M", "Mega Blastoise", ["Water"], [154, 123, 140, 155, 135, 98, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/009_f2.png"], ["Mega Launcher"]],
+["015", "Beedrill", ["Bug", "Poison"], [140, 110, 60, 65, 100, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/015_f1.png"], ["Adaptability"]],
 ["015M", "Mega Beedrill", ["Bug", "Poison"], [140, 170, 60, 35, 100, 165, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/015_f2.png"], ["Adaptability"]],
 ["018", "Pidgeot", ["Normal", "Flying"], [158, 100, 95, 90, 90, 121, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/018.png"], ["Keen Eye", "Tangled Feet"]],
 ["018M", "Mega Pidgeot", ["Normal", "Flying"], [158, 100, 100, 155, 100, 141, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/018_f2.png"], ["No Guard"]],
 ["024", "Arbok", ["Poison"], [135, 115, 89, 85, 99, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/024.png"], ["Intimidate", "Shed Skin"]],
 ["025", "Pikachu", ["Electric"], [110, 75, 60, 70, 70, 110, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/025.png"], ["Static", "Lightning Rod"]],
 ["026", "Raichu", ["Electric"], [135, 110, 75, 110, 100, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/026.png"], ["Static", "Lightning Rod"]],
-["026MX", "Mega Raichu X", ["Electric"], [135, 170, 95, 110, 100, 170, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/026_f3.png"], ["Electric Surge"]],
-["026MY", "Mega Raichu Y", ["Electric"], [135, 90, 85, 190, 110, 170, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/026_f4.png"], ["No Guard"]],
-["035", "Clefairy", ["Fairy"], [145, 65, 68, 80, 85, 55, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/035.png"], ["Cute Charm", "Magic Guard"]],
+["026MX", "Mega Raichu X", ["Electric"], [140, 155, 115,110, 115, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/026_f3.png"], ["Electric Surge"]],
+["026MY", "Mega Raichu Y", ["Electric"], [140, 120, 75, 180, 100, 150, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/026_f4.png"], ["No Guard"]],
+["035", "Clefable", ["Fairy"], [170, 90, 93, 105, 110, 80, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/035.png"], ["Cute Charm", "Magic Guard"]],
 ["035M", "Mega Clefable", ["Fairy"], [170, 100, 113, 155, 130, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/035_f2.png"], ["Magic Guard"]],
 ["038", "Ninetales", ["Fire"], [148, 96, 95, 101, 120, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/038.png"], ["Flash Fire", "Drought"]],
 ["038-A", "Ninetales Alola", ["Ice", "Fairy"], [148, 87, 95, 101, 120, 129, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/038_f2.png"], ["Snow Cloak", "Snow Warning"]],
 ["045", "Vileplume", ["Grass", "Poison"], [150, 100, 105, 130, 110, 70, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/045.png"], ["Chlorophyll", "Effect Spore"]],
 ["059", "Arcanine", ["Fire"], [165, 130, 100, 120, 100, 115, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/059.png"], ["Intimidate", "Flash Fire"]],
+["059-H", "Arcanine Hisui", ["Fire","Rock"], [170, 135, 100, 115, 100, 110, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/059_f2.png"], ["Intimidate", "Flash Fire","Rock Head"]],
 ["065", "Alakazam", ["Psychic"], [130, 70, 65, 155, 115, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/065.png"], ["Synchronize", "Inner Focus"]],
 ["065M", "Mega Alakazam", ["Psychic"], [130, 70, 85, 195, 125, 170, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/065_f2.png"], ["Trace"]],
 ["068", "Machamp", ["Fighting"], [165, 150, 100, 85, 105, 75, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/068.png"], ["Guts", "No Guard"]],
@@ -482,16 +505,19 @@ const POKE_SEED = [
 ["071M", "Mega Victreebel", ["Grass", "Poison"], [155, 145, 105, 155, 115, 90, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/071_f2.png"], ["Strong Jaw"]],
 ["080", "Slowbro", ["Water", "Psychic"], [170, 95, 130, 120, 100, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/080.png"], ["Oblivious", "Own Tempo"]],
 ["080M", "Mega Slowbro", ["Water", "Psychic"], [170, 95, 200, 150, 100, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/080_f2.png"], ["Shell Armor"]],
+["080-G", "Slowbro Galar", ["Poison", "Psychic"], [170, 120, 115, 120, 90, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/080_f3.png"], ["Quick Draw", "Own Tempo"]],
 ["094", "Gengar", ["Ghost", "Poison"], [135, 85, 80, 150, 95, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/094.png"], ["Cursed Body"]],
 ["094M", "Mega Gengar", ["Ghost", "Poison"], [135, 85, 100, 190, 115, 150, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/094_f2.png"], ["Shadow Tag"]],
 ["115", "Kangaskhan", ["Normal"], [180, 115, 100, 60, 100, 110, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/115.png"], ["Early Bird", "Scrappy"]],
 ["115M", "Mega Kangaskhan", ["Normal"], [180, 145, 120, 80, 120, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/115_f2.png"], ["Parental Bond"]],
 ["121", "Starmie", ["Water", "Psychic"], [135, 95, 105, 120, 105, 135, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/121.png"], ["Illuminate", "Natural Cure"]],
-["121M", "Mega Starmie", ["Water", "Psychic"], [135, 120, 125, 150, 125, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/121_f2.png"], ["Analytic"]],
+["121M", "Mega Starmie", ["Water", "Psychic"], [135, 160, 125, 150, 125, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/121_f2.png"], ["Analytic"]],
 ["127", "Pinsir", ["Bug"], [140, 145, 120, 75, 90, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/127.png"], ["Hyper Cutter", "Mold Breaker"]],
 ["127M", "Mega Pinsir", ["Bug", "Flying"], [140, 175, 140, 85, 110, 125, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/127_f2.png"], ["Aerilate"]],
 ["128", "Tauros", ["Normal"], [150, 120, 115, 60, 90, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128.png"], ["Intimidate", "Anger Point"]],
-["128-P", "Tauros Paldea", ["Fighting"], [75, 110, 105, 30, 70, 100, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128_f3.png"], ["Intimidate", "Anger Point", "Cud Chew"]],
+["128-P", "Tauros Paldea Lutador", ["Fighting"], [150, 130, 125, 50, 90, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128_f2.png"], ["Intimidate", "Anger Point", "Cud Chew"]],
+["128-P", "Tauros Paldea Fogo", ["Fighting","Fire"], [150, 130, 125, 50, 90, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128_f3.png"], ["Intimidate", "Anger Point", "Cud Chew"]],
+["128-P", "Tauros Paldea Água", ["Fighting","Water"], [150, 130, 125, 50, 90, 120, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/128_f4.png"], ["Intimidate", "Anger Point", "Cud Chew"]],
 ["130", "Gyarados", ["Water", "Flying"], [170, 145, 99, 80, 120, 101, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/130.png"], ["Intimidate", "Moxie"]],
 ["130M", "Mega Gyarados", ["Water", "Dark"], [170, 175, 129, 90, 150, 101, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/130_f2.png"], ["Mold Breaker"]],
 ["132", "Ditto", ["Normal"], [123, 68, 68, 68, 68, 68, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/132.png"], ["Limber", "Imposter"]],
@@ -517,11 +543,12 @@ const POKE_SEED = [
 ["196", "Espeon", ["Psychic"], [140, 85, 80, 150, 115, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/196.png"], ["Synchronize", "Magic Bounce"]],
 ["197", "Umbreon", ["Dark"], [170, 85, 130, 80, 150, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/197.png"], ["Synchronize", "Inner Focus"]],
 ["199", "Slowking", ["Water", "Psychic"], [170, 95, 100, 120, 130, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/199.png"], ["Oblivious", "Regenerator"]],
+["199-G", "Slowking Galar", ["Toxic", "Psychic"], [170, 85, 100, 130, 130, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/199_f2.png"],["Curious Medicine", "Own Tempo"]], 
 ["205", "Forretress", ["Bug", "Steel"], [150, 110, 160, 80, 80, 60, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/205.png"], ["Sturdy", "Overcoat"]],
 ["208", "Steelix", ["Steel", "Ground"], [150, 105, 220, 75, 85, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/208.png"], ["Rock Head", "Sturdy"]],
 ["208M", "Mega Steelix", ["Steel", "Ground"], [150, 145, 250, 75, 115, 50, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/208_f2.png"], ["Sand Force"]],
 ["211", "Qwilfish", ["Water", "Poison"], [140, 115, 105, 75, 75, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/211.png"], ["Poison Point", "Intimidate"]],
-["211-H", "Qwilfish Hisui", ["Dark", "Poison"], [65, 95, 85, 55, 55, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/211_f2.png"], ["Poison Point", "Swift Swim", "Intimidate"]],
+["211-H", "Qwilfish Hisui", ["Dark", "Poison"], [140, 115, 105, 75, 75, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/211_f2.png"], ["Poison Point", "Swift Swim", "Intimidate"]],
 ["212", "Scizor", ["Bug", "Steel"], [145, 150, 120, 75, 100, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/212.png"], ["Swarm", "Technician"]],
 ["212M", "Mega Scizor", ["Bug", "Steel"], [145, 170, 160, 85, 120, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/212_f2.png"], ["Technician"]],
 ["214", "Heracross", ["Bug", "Fighting"], [155, 145, 95, 60, 115, 105, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/214.png"], ["Swarm", "Guts"]],
@@ -600,11 +627,11 @@ const POKE_SEED = [
 ["478", "Froslass", ["Ice", "Ghost"], [145, 100, 90, 100, 90, 130, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/478.png"], ["Snow Cloak", "Cursed Body"]],
 ["478M", "Mega Froslass", ["Ice", "Ghost"], [145, 100, 90, 160, 120, 140, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/478_f2.png"], ["Snow Warning"]],
 ["479", "Rotom", ["Electric", "Ghost"], [125, 70, 97, 115, 97, 111, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479.png"], ["Levitate"]],
-["479H", "Heat Rotom", ["Electric", "Fire"], [50, 65, 107, 105, 107, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f2.png"], ["Levitate"]],
-["479W", "Wash Rotom", ["Electric", "Water"], [50, 65, 107, 105, 107, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f3.png"], ["Levitate"]],
-["479F", "Frost Rotom", ["Electric", "Ice"], [50, 65, 107, 105, 107, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f4.png"], ["Levitate"]],
-["479S", "Fan Rotom", ["Electric", "Flying"], [50, 65, 107, 105, 107, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f5.png"], ["Levitate"]],
-["479M", "Mow Rotom", ["Electric", "Grass"], [50, 65, 107, 105, 107, 86, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f6.png"], ["Levitate"]],
+["479H", "Heat Rotom", ["Electric", "Fire"], [125, 85, 127, 125, 127, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f2.png"], ["Levitate"]],
+["479W", "Wash Rotom", ["Electric", "Water"], [125, 85, 127, 125, 127, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f3.png"], ["Levitate"]],
+["479F", "Frost Rotom", ["Electric", "Ice"], [125, 85, 127, 125, 127, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f4.png"], ["Levitate"]],
+["479S", "Fan Rotom", ["Electric", "Flying"], [125, 85, 127, 125, 127, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f5.png"], ["Levitate"]],
+["479M", "Mow Rotom", ["Electric", "Grass"], [125, 85, 127, 125, 127, 106, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/479_f6.png"], ["Levitate"]],
 ["497", "Serperior", ["Grass"], [150, 95, 115, 95, 115, 133, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/497.png"], ["Overgrow", "Contrary"]],
 ["500", "Emboar", ["Fire", "Fighting"], [185, 143, 85, 120, 85, 85, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/500.png"], ["Blaze", "Reckless"]],
 ["500M", "Mega Emboar", ["Fire", "Fighting"], [185, 168, 95, 130, 130, 95, "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/500_f2.png"], ["Reckless"]],
@@ -1174,6 +1201,27 @@ function getRegionalsFor(baseNum){ return DB.pokemon.filter(p => { const info = 
 // Stored as a 6th array slot on the pokemon entry: p[5] = { gender: { baseLabel, altLabel, altTypes?, altStats, altAbilities, altImage? } }
 function genderDataOf(p){ return (p && p[5] && p[5].gender) ? p[5].gender : null; }
 
+// Formas de aparelho do Rotom (mecânica própria, específica dessa espécie): todas usam os
+// mesmos status e habilidade do Rotom base — só o segundo tipo (e o nome) mudam.
+// Número da forma = "479-R" + código do aparelho.
+const ROTOM_BASE_NUM = '479';
+const ROTOM_FORMS = {
+  H: { label:'Calor',       altType:'Fire',   displayName:'Rotom de Calor' },
+  W: { label:'Lavagem',     altType:'Water',  displayName:'Rotom de Lavagem' },
+  I: { label:'Gelo',        altType:'Ice',    displayName:'Rotom de Gelo' },
+  V: { label:'Ventilador',  altType:'Flying', displayName:'Rotom Ventilador' },
+  C: { label:'Corte',       altType:'Grass',  displayName:'Rotom de Corte' },
+};
+function rotomFormNum(baseNum, code){ return `${baseNum}-R${code}`; }
+function rotomFormInfo(num){
+  const m = String(num).match(/^(\d+)-R([HWIVC])$/);
+  if(!m) return null;
+  const code = m[2];
+  return { baseNum:m[1], code, ...ROTOM_FORMS[code] };
+}
+function isRotomFormNum(num){ return rotomFormInfo(num) !== null; }
+function getRotomFormsFor(baseNum){ return DB.pokemon.filter(p=>{ const info=rotomFormInfo(p[0]); return info && info.baseNum===String(baseNum); }); }
+
 /* =============================================================
    NAV
 ============================================================= */
@@ -1215,8 +1263,9 @@ function renderPokeGrid(){
   const sortBy = document.getElementById('pokeSort').value;
   let list = DB.pokemon.filter(p=>{
     const [num,name,types] = p;
-    if(isMegaNum(num)) return false; // megas only appear via the mega-stone icon
-    if(isRegionalNum(num)) return false; // regional forms only appear via the regional-badge icon
+    if(isMegaNum(num)) return false; // megas only appear via o ícone
+    if(isRegionalNum(num)) return false; // formas regionais só aparecem via o ícone
+    if(isRotomFormNum(num)) return false; // formas de Rotom só aparecem via o ícone
     if(search && !name.toLowerCase().includes(search)) return false;
     if(typeF && !types.includes(typeF)) return false;
     return true;
@@ -1227,8 +1276,9 @@ function renderPokeGrid(){
 
   const megaCount = DB.pokemon.filter(p=>isMegaNum(p[0])).length;
   const regionalCount = DB.pokemon.filter(p=>isRegionalNum(p[0])).length;
-  const baseCount = DB.pokemon.length - megaCount - regionalCount;
-  document.getElementById('pokeCount').textContent = baseCount + ' registrados' + (megaCount?` · ${megaCount} Mega`:'') + (regionalCount?` · ${regionalCount} Regional`:'');
+  const rotomCount = DB.pokemon.filter(p=>isRotomFormNum(p[0])).length;
+  const baseCount = DB.pokemon.length - megaCount - regionalCount - rotomCount;
+  document.getElementById('pokeCount').textContent = baseCount + ' registrados' + (megaCount?` · ${megaCount} Mega`:'') + (regionalCount?` · ${regionalCount} Regional`:'') + (rotomCount?` · ${rotomCount} Rotom`:'');
   const grid = document.getElementById('pokeGrid');
   if(!list.length){ grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="big">◈</div>Nenhum Pokémon encontrado.</div>`; return; }
   grid.innerHTML = list.map(p=>{
@@ -1251,6 +1301,10 @@ function renderPokeGrid(){
       const info = regionalInfo(rg[0]);
       return `<div class="regional-badge" title="Forma Regional: ${info.label}" onclick='event.stopPropagation(); openPokeDetail(${JSON.stringify(rg[0])});'><span>${info.code}</span></div>`;
     }).join('')}</div>` : '';
+    const rotomHtml = (!pokeSelectMode && getRotomFormsFor(num).length) ? `<div class="rotom-row">${getRotomFormsFor(num).map(rf=>{
+      const info = rotomFormInfo(rf[0]);
+      return `<div class="rotom-badge" title="Rotom de ${info.label}" onclick='event.stopPropagation(); openPokeDetail(${JSON.stringify(rf[0])});'><span>${info.code}</span></div>`;
+    }).join('')}</div>` : '';
     const gd = genderDataOf(p);
     const genderBadge = (!pokeSelectMode && gd) ? `<div class="gender-badge" title="Status muda por gênero">♂♀</div>` : '';
     const cardClick = pokeSelectMode ? `togglePokeSelect(${JSON.stringify(String(num))})` : `openPokeDetail(${JSON.stringify(num)})`;
@@ -1263,6 +1317,7 @@ function renderPokeGrid(){
       <div class="types">${types.map(typeBadge).join('')}</div>
       ${megaHtml}
       ${regionalHtml}
+      ${rotomHtml}
       <div class="bst-bar"><i style="width:${pct}%"></i></div>
       <div class="bst-label"><span>BST</span><span>${total}</span></div>
     </div>`;
@@ -1324,47 +1379,65 @@ function openPokeDetail(num, genderView){
     if(m>1) weak.push(t); else if(m>0 && m<1) resist.push(t); else if(m===0) immune.push(t);
   });
 
-  const megasHere = (isMegaNum(pnum)||isRegionalNum(pnum)) ? [] : getMegasFor(pnum);
+  const megasHere = (isMegaNum(pnum)||isRegionalNum(pnum)||isRotomFormNum(pnum)) ? [] : getMegasFor(pnum);
   const megaHtml = megasHere.length ? `<div class="mega-row">${megasHere.map(mg=>{
     const suffix = mg[0].endsWith('MX')?'X':mg[0].endsWith('MY')?'Y':'';
     return `<div class="mega-stone" title="Mega Evolução${suffix?' '+suffix:''}" onclick='openPokeDetail(${JSON.stringify(mg[0])});'><span>${suffix||'M'}</span></div>`;
   }).join('')}</div>` : '';
 
-  const regionalsHere = (isMegaNum(pnum)||isRegionalNum(pnum)) ? [] : getRegionalsFor(pnum);
+  const regionalsHere = (isMegaNum(pnum)||isRegionalNum(pnum)||isRotomFormNum(pnum)) ? [] : getRegionalsFor(pnum);
   const regionalHtml = regionalsHere.length ? `<div class="regional-row">${regionalsHere.map(rg=>{
     const info = regionalInfo(rg[0]);
     return `<div class="regional-badge" title="Forma Regional: ${info.label}" onclick='openPokeDetail(${JSON.stringify(rg[0])});'><span>${info.code}</span></div>`;
+  }).join('')}</div>` : '';
+
+  const rotomFormsHere = (isMegaNum(pnum)||isRegionalNum(pnum)||isRotomFormNum(pnum)) ? [] : getRotomFormsFor(pnum);
+  const rotomHtml = rotomFormsHere.length ? `<div class="rotom-row">${rotomFormsHere.map(rf=>{
+    const info = rotomFormInfo(rf[0]);
+    return `<div class="rotom-badge" title="Rotom de ${info.label}" onclick='openPokeDetail(${JSON.stringify(rf[0])});'><span>${info.code}</span></div>`;
   }).join('')}</div>` : '';
 
   const backBtn = isMegaNum(pnum)
     ? `<button class="mega-back" onclick='openPokeDetail(${JSON.stringify(baseNumOf(pnum))})'>← Voltar para forma base</button>`
     : isRegionalNum(pnum)
     ? `<button class="regional-back" onclick='openPokeDetail(${JSON.stringify(regionalInfo(pnum).baseNum)})'>← Voltar para forma base</button>`
+    : isRotomFormNum(pnum)
+    ? `<button class="rotom-back" onclick='openPokeDetail(${JSON.stringify(rotomFormInfo(pnum).baseNum)})'>← Voltar para forma base</button>`
     : '';
 
   const regionTag = isRegionalNum(pnum) ? ` <span class="pill" style="margin-left:6px;">Forma ${regionalInfo(pnum).label}</span>` : '';
+  const rotomTag = isRotomFormNum(pnum) ? ` <span class="pill" style="margin-left:6px;">Forma de Aparelho: ${rotomFormInfo(pnum).label}</span>` : '';
+
+  const rotomManageBtn = (String(pnum)===ROTOM_BASE_NUM) ? `<button class="btn secondary small" onclick="openRotomFormsManager()">Gerenciar Formas</button>` : '';
 
   const genderToggle = gd ? `<div class="gender-toggle">
       <button class="btn small ${!showFemale?'active':'secondary'}" onclick='openPokeDetail(${JSON.stringify(pnum)}, "M")'>♂ ${gd.baseLabel||'Macho'}</button>
       <button class="btn small ${showFemale?'active':'secondary'}" onclick='openPokeDetail(${JSON.stringify(pnum)}, "F")'>♀ ${gd.altLabel||'Fêmea'}</button>
     </div>` : '';
 
+  const imgClickAttr = showFemale ? `quickSetGenderImage(${JSON.stringify(pnum)})` : `quickSetImage(${JSON.stringify(pnum)}, true)`;
+  const imgBlock = image
+    ? `<img src="${image}" alt="${name}" title="Clique para trocar a imagem" style="width:100%;max-height:220px;object-fit:contain;background:var(--panel2);border-radius:10px;margin-bottom:14px;cursor:pointer;" onerror="this.style.display='none'" onclick='${imgClickAttr}'>`
+    : `<div title="Clique para adicionar uma imagem" style="width:100%;height:70px;display:flex;align-items:center;justify-content:center;background:var(--panel2);border-radius:10px;margin-bottom:14px;color:var(--muted);font-size:12px;cursor:pointer;" onclick='${imgClickAttr}'>+ adicionar imagem</div>`;
+
   openModal(`
     ${backBtn}
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;">
       <div>
         <div style="font-family:var(--mono);color:var(--muted);font-size:12px;">#${pnum}</div>
-        <h2>${name}${regionTag}</h2>
+        <h2>${name}${regionTag}${rotomTag}</h2>
         <div class="types" style="margin:6px 0 8px;">${types.map(typeBadge).join('')}</div>
         ${megaHtml}
         ${regionalHtml}
+        ${rotomHtml}
         ${genderToggle}
       </div>
       <div style="display:flex;gap:8px;flex-shrink:0;">
+        ${rotomManageBtn}
         <button class="btn secondary small" onclick='openEditPoke(${JSON.stringify(pnum)})'>Editar</button>
       </div>
     </div>
-    ${image?`<img src="${image}" alt="${name}" style="width:100%;max-height:220px;object-fit:contain;background:var(--panel2);border-radius:10px;margin-bottom:14px;" onerror="this.style.display='none'">`:''}
+    ${imgBlock}
     <div style="font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:700;">STATUS BASE (BST ${bst(stats)})</div>
     ${statHtml}
     <div style="margin-top:16px;font-size:12px;color:var(--muted);font-weight:700;">HABILIDADES</div>
@@ -1376,6 +1449,53 @@ function openPokeDetail(num, genderView){
     ${immune.length? `<div style="margin-top:10px;font-size:12px;color:var(--muted);font-weight:700;">IMUNIDADES</div><div style="margin:6px 0;">${immune.map(typeBadge).join('')}</div>` : ''}
   `);
 }
+
+/* ---- Formulário próprio: Formas de Aparelho do Rotom ---- */
+function openRotomFormsManager(){
+  const baseP = DB.pokemon.find(x=>String(x[0])===ROTOM_BASE_NUM);
+  if(!baseP){ alert('Rotom base (#'+ROTOM_BASE_NUM+') não encontrado na Dex.'); return; }
+  const rows = Object.keys(ROTOM_FORMS).map(code=>{
+    const info = ROTOM_FORMS[code];
+    const num = rotomFormNum(ROTOM_BASE_NUM, code);
+    const existing = DB.pokemon.find(x=>String(x[0])===num);
+    return `<div class="rotom-form-row">
+      <input type="checkbox" id="rf_${code}_on" ${existing?'checked':''}>
+      <div class="rf-name">
+        <b>${info.displayName}</b>
+        <span>Electric / ${TYPE_PT[info.altType]}</span>
+      </div>
+      <input type="text" id="rf_${code}_img" placeholder="URL da imagem (opcional)" value="${existing?(existing[3][6]||''):''}">
+    </div>`;
+  }).join('');
+  openModal(`
+    <h2>Formas de Aparelho do Rotom</h2>
+    <p style="color:var(--muted);font-size:12.5px;margin:4px 0 12px;">Marque quais formas devem existir na Dex. Todas usam os mesmos status e habilidade do Rotom base (#${ROTOM_BASE_NUM}) — só o segundo tipo (e o nome) muda. Desmarcar remove a forma da Dex.</p>
+    ${rows}
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn secondary" onclick='openPokeDetail(${JSON.stringify(ROTOM_BASE_NUM)})'>Cancelar</button>
+      <button class="btn" onclick="saveRotomForms()">Salvar</button>
+    </div>
+  `);
+}
+async function saveRotomForms(){
+  const baseP = DB.pokemon.find(x=>String(x[0])===ROTOM_BASE_NUM);
+  if(!baseP) return;
+  Object.keys(ROTOM_FORMS).forEach(code=>{
+    const info = ROTOM_FORMS[code];
+    const num = rotomFormNum(ROTOM_BASE_NUM, code);
+    const on = document.getElementById(`rf_${code}_on`).checked;
+    const img = document.getElementById(`rf_${code}_img`).value.trim();
+    DB.pokemon = DB.pokemon.filter(x=>String(x[0])!==num); // remove a versão antiga e recria se marcada
+    if(on){
+      const stats = [...baseP[3].slice(0,6), img];
+      DB.pokemon.push([num, info.displayName, ['Electric', info.altType], stats, [...baseP[4]]]);
+    }
+  });
+  await saveDB();
+  renderPokeGrid();
+  openPokeDetail(ROTOM_BASE_NUM);
+}
+
 async function deletePoke(num){
   if(!confirm('Remover este Pokémon da sua Dex?')) return;
   DB.pokemon = DB.pokemon.filter(p=>String(p[0])!==String(num));
@@ -1413,7 +1533,7 @@ function openPokeForm(existing){
     </div>
   `);
 }
-function quickSetImage(num){
+function quickSetImage(num, fromDetail){
   const p = DB.pokemon.find(x=>String(x[0])===String(num));
   if(!p) return;
   const currentImg = p[3][6];
@@ -1422,24 +1542,54 @@ function quickSetImage(num){
     <p style="color:var(--muted);font-size:12.5px;margin:4px 0 12px;">Cole o link direto da imagem (termina em .png, .jpg, .gif...).</p>
     <input type="text" id="quickImgUrl" value="${currentImg||''}" placeholder="https://exemplo.com/imagem.png" style="width:100%;" autofocus>
     <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
-      ${currentImg?`<button class="btn danger small" onclick='quickSaveImage(${JSON.stringify(num)}, true)'>Remover imagem</button>`:''}
-      <button class="btn secondary" onclick="closeModal()">Cancelar</button>
-      <button class="btn" onclick='quickSaveImage(${JSON.stringify(num)}, false)'>Salvar</button>
+      ${currentImg?`<button class="btn danger small" onclick='quickSaveImage(${JSON.stringify(num)}, true, ${fromDetail?'true':'false'})'>Remover imagem</button>`:''}
+      <button class="btn secondary" onclick='${fromDetail?`openPokeDetail(${JSON.stringify(num)})`:'closeModal()'}'>Cancelar</button>
+      <button class="btn" onclick='quickSaveImage(${JSON.stringify(num)}, false, ${fromDetail?'true':'false'})'>Salvar</button>
     </div>
   `);
   setTimeout(()=>{
     const inp = document.getElementById('quickImgUrl');
-    if(inp){ inp.focus(); inp.select(); inp.addEventListener('keydown', e=>{ if(e.key==='Enter') quickSaveImage(num, false); }); }
+    if(inp){ inp.focus(); inp.select(); inp.addEventListener('keydown', e=>{ if(e.key==='Enter') quickSaveImage(num, false, fromDetail); }); }
   }, 30);
 }
-async function quickSaveImage(num, clear){
+async function quickSaveImage(num, clear, fromDetail){
   const p = DB.pokemon.find(x=>String(x[0])===String(num));
   if(!p) return;
   const url = clear ? '' : document.getElementById('quickImgUrl').value.trim();
   p[3][6] = url; // stats: [HP, Atk, Def, SpA, SpD, Spe, linkimg]
   await saveDB();
-  closeModal();
-  renderPokeGrid();
+  if(fromDetail){ openPokeDetail(num); }
+  else { closeModal(); renderPokeGrid(); }
+}
+
+// ---- Imagem da variante de gênero (ex: fêmea do Meowstic/Basculegion) ----
+function quickSetGenderImage(num){
+  const p = DB.pokemon.find(x=>String(x[0])===String(num));
+  const gd = genderDataOf(p);
+  if(!gd) return;
+  const currentImg = gd.altImage || '';
+  openModal(`
+    <h2>Imagem — ${p[1]} (${gd.altLabel||'Fêmea'})</h2>
+    <p style="color:var(--muted);font-size:12.5px;margin:4px 0 12px;">Cole o link direto da imagem para esta variante de gênero. Se deixar vazio, a imagem padrão do Pokémon será usada.</p>
+    <input type="text" id="quickGenderImgUrl" value="${currentImg}" placeholder="https://exemplo.com/imagem.png" style="width:100%;" autofocus>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
+      ${currentImg?`<button class="btn danger small" onclick='quickSaveGenderImage(${JSON.stringify(num)}, true)'>Remover imagem</button>`:''}
+      <button class="btn secondary" onclick='openPokeDetail(${JSON.stringify(num)}, "F")'>Cancelar</button>
+      <button class="btn" onclick='quickSaveGenderImage(${JSON.stringify(num)}, false)'>Salvar</button>
+    </div>
+  `);
+  setTimeout(()=>{
+    const inp = document.getElementById('quickGenderImgUrl');
+    if(inp){ inp.focus(); inp.select(); inp.addEventListener('keydown', e=>{ if(e.key==='Enter') quickSaveGenderImage(num, false); }); }
+  }, 30);
+}
+async function quickSaveGenderImage(num, clear){
+  const p = DB.pokemon.find(x=>String(x[0])===String(num));
+  const gd = genderDataOf(p);
+  if(!gd) return;
+  gd.altImage = clear ? '' : document.getElementById('quickGenderImgUrl').value.trim();
+  await saveDB();
+  openPokeDetail(num, 'F');
 }
 
 async function saveNewPoke(){
